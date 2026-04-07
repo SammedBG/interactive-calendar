@@ -3,6 +3,9 @@ import { DayCell } from './DayCell';
 import { SelectionState } from '../hooks/useCalendar';
 import { ThemeClasses } from './CalendarLayout';
 
+const NOTE_KEY_SINGLE = /^note_(\d{4}-\d{2}-\d{2})$/;
+const NOTE_KEY_RANGE = /^note_(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})$/;
+
 interface CalendarGridProps {
   currentMonth: Date;
   selection: SelectionState;
@@ -44,6 +47,27 @@ export function CalendarGrid({
 
   // Generate days in the grid
   const daysInGrid = eachDayOfInterval({ start: startDate, end: endDate });
+  const noteRanges = Object.entries(notesRecord).reduce((acc, [key, value]) => {
+    if (!value || value.trim() === '') {
+      return acc;
+    }
+
+    const rangeMatch = NOTE_KEY_RANGE.exec(key);
+    if (rangeMatch) {
+      const start = rangeMatch[1];
+      const end = rangeMatch[2];
+      acc.push(start <= end ? { start, end } : { start: end, end: start });
+      return acc;
+    }
+
+    const singleMatch = NOTE_KEY_SINGLE.exec(key);
+    if (singleMatch) {
+      const dayKey = singleMatch[1];
+      acc.push({ start: dayKey, end: dayKey });
+    }
+
+    return acc;
+  }, [] as Array<{ start: string; end: string }>);
 
   return (
     <div className="flex-1 flex flex-col p-4 sm:p-6 pb-0">
@@ -53,7 +77,7 @@ export function CalendarGrid({
       <div className="grid grid-cols-7 gap-y-1 sm:gap-y-2 flex-1">
         {daysInGrid.map(d => {
           const formattedDay = format(d, 'yyyy-MM-dd');
-          const hasNote = Object.keys(notesRecord).some(key => key.includes(formattedDay));
+          const hasNote = noteRanges.some(range => formattedDay >= range.start && formattedDay <= range.end);
           
           return (
             <DayCell
