@@ -14,12 +14,13 @@ export interface DayCellProps {
   onClick: (date: Date) => void;
 }
 
-// 5 hardcoded public holidays
+// 6 hardcoded Indian public holidays (fixed dates)
 const HOLIDAYS: Record<string, string> = {
-  '01-01': "New Year's",
-  '07-04': "Independence",
-  '10-31': "Halloween",
-  '11-25': "Thanksgiving",
+  '01-01': "New Year's Day",
+  '01-26': "Republic Day",
+  '05-01': "Labour Day",
+  '08-15': "Independence Day",
+  '10-02': "Gandhi Jayanti",
   '12-25': "Christmas",
 };
 
