@@ -12,11 +12,24 @@ export interface HeroImageProps {
   onPrev: () => void;
 }
 
-// Static image used for all months to match design strictly
-const CURRENT_IMAGE_URL = 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop'; // A similar beautiful snow mountain aesthetic
+const MONTH_IMAGES = [
+  'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop', // Jan
+  'https://images.unsplash.com/photo-1422207134147-65fb81f59e38?q=80&w=800&auto=format&fit=crop', // Feb
+  'https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?q=80&w=800&auto=format&fit=crop', // Mar
+  'https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?q=80&w=800&auto=format&fit=crop', // Apr
+  'https://images.unsplash.com/photo-1490750967868-88cb44cb2722?q=80&w=800&auto=format&fit=crop', // May
+  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop', // Jun
+  'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?q=80&w=800&auto=format&fit=crop', // Jul
+  'https://images.unsplash.com/photo-1433838552652-f9a46b332c40?q=80&w=800&auto=format&fit=crop', // Aug
+  'https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=800&auto=format&fit=crop', // Sep
+  'https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=800&auto=format&fit=crop', // Oct
+  'https://images.unsplash.com/photo-1444044205806-38f32ac628f5?q=80&w=800&auto=format&fit=crop', // Nov
+  'https://images.unsplash.com/photo-1544261453-24151fb4ad0c?q=80&w=800&auto=format&fit=crop', // Dec
+];
 
 export function HeroImage({ currentMonth, themeClasses, onNext, onPrev }: HeroImageProps) {
-  const imageUrl = CURRENT_IMAGE_URL;
+  const monthIndex = currentMonth.getMonth();
+  const imageUrl = MONTH_IMAGES[monthIndex];
 
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -26,7 +39,7 @@ export function HeroImage({ currentMonth, themeClasses, onNext, onPrev }: HeroIm
   }, []);
 
   return (
-    <div className="relative w-full h-[350px] sm:h-[400px] flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 rounded-t-sm z-10">
+    <div className="relative w-full h-[350px] sm:h-[400px] flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 rounded-t-sm z-10 transition-colors duration-500">
       <Image
         src={imageUrl}
         alt={`${format(currentMonth, 'MMMM')} hero image`}
@@ -35,57 +48,63 @@ export function HeroImage({ currentMonth, themeClasses, onNext, onPrev }: HeroIm
         className="object-cover transition-all duration-1000 ease-in-out"
         priority
       />
-      
-      <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-black/50 to-transparent z-10" />
 
-      {/* Top Navbar */}
-      <div className="absolute top-4 right-4 z-20 flex space-x-2">
-        <button
-          onClick={onPrev}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/40 text-white transition-colors"
-          aria-label="Previous month"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          onClick={onNext}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/40 text-white transition-colors"
-          aria-label="Next month"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
-        <div className="w-2" />
+      {/* Top Right Theme Toggle (like the physical pill block in image) */}
+      <div className="absolute top-4 right-4 z-20 flex bg-white/90 backdrop-blur rounded-full p-1 border border-neutral-200">
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/40 text-white transition-colors"
+          className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-200 text-neutral-800 transition-colors"
           aria-label="Toggle theme"
         >
-          {mounted && (theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
+          {mounted && (theme === 'dark' ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />)}
         </button>
+        <div className="w-6 h-6 flex items-center justify-center">
+          <div className="w-3.5 h-3.5 rounded-full bg-[#3ec0ff]" />
+        </div>
+        <div className="w-6 h-6 flex items-center justify-center">
+          <div className="w-3.5 h-3.5 rounded-full bg-[#1b2a47]" />
+        </div>
       </div>
 
-      {/* Flat angular chevron overlay at the bottom */}
+      {/* Flat angular chevron overlay precisely matching reference mountain cutout */}
       <div className="absolute bottom-0 inset-x-0 z-10 transform translate-y-[1px]">
-        {/* Exact Geometric V-shape matches the original physical layout */}
-        <svg viewBox="0 0 1440 320" className="w-full text-white dark:text-neutral-900 transition-colors duration-500" preserveAspectRatio="none" style={{ height: '160px' }}>
-          {/* Accent colored angled V-band */}
+        <svg viewBox="0 0 1440 320" className="w-full text-white dark:text-neutral-900 transition-colors duration-500" preserveAspectRatio="none" style={{ height: '140px' }}>
+          {/* Main Blue Mountain/Chevron shape */}
           <path 
             fill="currentColor"
             className={`${themeClasses.text} transition-colors duration-500 ease-in-out`}
-            d="M0,96L480,256L1440,64L1440,320L480,320L0,320Z"
+            d="M0,220 L400,300 L650,200 L950,280 L1440,100 L1440,320 L0,320 Z"
           ></path>
-          {/* Main White/Dark Background cut-out representing the physical paper page meeting the blue chevron */}
+          {/* Main White/Dark Background bottom line (meets the physical paper perfectly below the blue shape) */}
           <path 
             fill="currentColor" 
-            d="M0,192L480,320L1440,160L1440,320L0,320Z"
+            d="M0,290 L400,320 L650,270 L950,320 L1440,240 L1440,320 L0,320 Z"
           ></path>
         </svg>
 
         {/* Text inside the right side of the blue chevron */}
-        <div className="absolute bottom-16 right-8 sm:right-16 z-20 text-white text-right">
-          <div className="text-xl sm:text-2xl font-light tracking-widest">{format(currentMonth, 'yyyy')}</div>
-          <div className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-wider">
+        <div className="absolute bottom-[70px] right-8 sm:right-16 z-20 text-white text-right flex flex-col items-end">
+          <div className="text-xl sm:text-2xl tracking-widest font-bold opacity-90">{format(currentMonth, 'yyyy')}</div>
+          <div className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-wide leading-none mt-1">
             {format(currentMonth, 'MMMM')}
+          </div>
+          
+          {/* Calendar Navigation Buttons matching Image precisely */}
+          <div className="flex space-x-1.5 mt-3">
+            <button
+              onClick={onPrev}
+              className="w-6 h-6 flex items-center justify-center border border-white/80 rounded-[2px] hover:bg-white/20 transition-colors"
+              aria-label="Previous month"
+            >
+              <ChevronLeft className="w-3.5 h-3.5 text-white" />
+            </button>
+            <button
+              onClick={onNext}
+              className="w-6 h-6 flex items-center justify-center border border-white/80 rounded-[2px] hover:bg-white/20 transition-colors"
+              aria-label="Next month"
+            >
+              <ChevronRight className="w-3.5 h-3.5 text-white" />
+            </button>
           </div>
         </div>
       </div>
