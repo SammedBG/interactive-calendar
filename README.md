@@ -25,6 +25,16 @@ A polished, fully interactive physical-style wall calendar component built with 
 - **Framer Motion:** High-performance hardware-accelerated gestures and animations.
 - **Lucide React:** Beautiful UI iconography.
 
+## Tech Choices
+
+- **Next.js 14 (App Router):** Modern routing, fast dev server, and production-ready build pipeline.
+- **TypeScript:** Strong typing across components and hooks for reliability and refactor safety.
+- **Tailwind CSS:** Utility-first styling for rapid iteration and consistent, responsive UI.
+- **Date-fns:** Lightweight, immutable date utilities for calendar math.
+- **Framer Motion:** Smooth, high-performance month transition animations.
+- **Next-themes:** Simple, robust dark/light mode support.
+- **Lucide React:** Clean, consistent icon set for navigation controls.
+
 ## Getting Started
 
 1. Clone or clone the repository to your local machine.
