@@ -93,7 +93,7 @@ export function CalendarLayout() {
         />
 
         {/* Bottom half: Notes (Left) & Calendar Grid (Right) */}
-        <div className="flex flex-col md:flex-row w-full bg-white dark:bg-neutral-900 z-30 relative pt-2 pb-8 px-4 sm:px-8 shadow-inner">
+        <div className="flex flex-col md:flex-row w-full bg-white dark:bg-neutral-900 z-30 relative pt-2 pb-8 px-4 sm:px-8 shadow-inner min-h-[500px] sm:min-h-[600px]">
           
           {/* Notes Panel on the left */}
           <div className="w-full md:w-[35%] md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 mb-8 md:mb-0">
@@ -105,7 +105,7 @@ export function CalendarLayout() {
           </div>
 
           {/* Calendar Grid on the right */}
-          <div className="w-full md:w-[65%] pl-0 md:pl-6 relative min-h-[420px]">
+          <div className="w-full md:w-[65%] pl-0 md:pl-6 relative">
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
                 key={currentMonth.toISOString()}
@@ -118,7 +118,7 @@ export function CalendarLayout() {
                   rotateX: { type: "spring", stiffness: 100, damping: 20 },
                   opacity: { duration: 0.3 }
                 }}
-                className="absolute inset-0 flex flex-col h-full perspective-[1000px]"
+                className="absolute inset-x-0 top-0 flex flex-col perspective-[1000px]"
               >
                 <CalendarGrid 
                   currentMonth={currentMonth}
