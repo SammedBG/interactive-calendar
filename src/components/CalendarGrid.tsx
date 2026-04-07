@@ -38,7 +38,7 @@ export function CalendarGrid({
   for (let i = 0; i < 7; i++) {
     const isWeekend = i === 5 || i === 6;
     days.push(
-      <div key={i} className={`text-center font-bold text-[10px] sm:text-xs py-3 uppercase tracking-wider ${isWeekend ? themeClasses.text : 'text-neutral-800 dark:text-neutral-300'}`}>
+      <div key={i} className={`text-center font-bold text-[10px] sm:text-xs py-3 uppercase tracking-[0.2em] font-outfit ${isWeekend ? themeClasses.text : 'text-neutral-500 dark:text-neutral-400'}`}>
         {format(day, dateFormat).substring(0, 3)}
       </div>
     );

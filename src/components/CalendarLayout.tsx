@@ -62,32 +62,45 @@ export function CalendarLayout() {
   };
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-neutral-200 dark:bg-neutral-950 p-4 sm:p-12 font-sans overflow-y-auto">
-      <div className="relative flex flex-col w-full max-w-4xl bg-white dark:bg-neutral-900 shadow-2xl rounded-sm overflow-visible transition-colors duration-500 mt-8 mb-8">
+    <div className="flex justify-center items-start min-h-screen relative p-4 sm:p-12 overflow-y-auto">
+      
+      {/* Dynamic ambient background glow */}
+      <div 
+        className={`fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none transition-colors duration-1000 ease-in-out ${themeClasses.bg}`}
+      />
+      <div 
+        className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 opacity-20 blur-[120px] pointer-events-none transition-colors duration-1000 ease-in-out ${themeClasses.bg}`}
+      />
+
+      <div className="relative flex flex-col w-full max-w-4xl bg-white/90 dark:bg-[#111111]/90 backdrop-blur-xl shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-white/20 dark:border-neutral-800/50 rounded-2xl overflow-hidden transition-colors duration-500 mt-8 mb-8">
         
-        {/* Spiral Binding */}
-        <div className="absolute -top-4 left-0 right-0 h-8 flex justify-center space-x-2 sm:space-x-4 z-40">
-          {[...Array(20)].map((_, i) => (
-            <div key={i} className="w-2 sm:w-3 flex flex-col items-center">
-              <div className="w-full h-3 bg-neutral-800 rounded-full shadow-sm" />
-              <div className="w-1.5 h-6 bg-neutral-600 rounded-full -mt-2 shadow-md z-10" />
+        {/* Binder / Top Handle */}
+        <div className="absolute top-0 inset-x-0 h-10 flex justify-center items-start space-x-3 sm:space-x-5 z-40 ptr-events-none backdrop-blur-sm bg-gradient-to-b from-black/10 to-transparent pt-1">
+          {[...Array(14)].map((_, i) => (
+            <div key={i} className="relative w-3 sm:w-4 flex flex-col items-center group perspective-1000">
+              {/* Metallic Ring */}
+              <div className="w-full h-8 rounded-full bg-gradient-to-b from-neutral-300 via-neutral-100 to-neutral-400 dark:from-neutral-700 dark:via-neutral-500 dark:to-neutral-800 shadow-sm border border-black/5 dark:border-white/5 relative transform-style-3d shadow-inner overflow-hidden">
+                 <div className="absolute top-1/2 left-0 right-0 h-px bg-white/50 dark:bg-black/50" />
+              </div>
             </div>
           ))}
         </div>
 
         {/* Top half: Hero Image including wavy shape, title, and navigation */}
-        <HeroImage 
-          currentMonth={currentMonth} 
-          themeClasses={themeClasses} 
-          onNext={handleNext} 
-          onPrev={handlePrev} 
-        />
+        <div className="pt-2">
+          <HeroImage 
+            currentMonth={currentMonth} 
+            themeClasses={themeClasses} 
+            onNext={handleNext} 
+            onPrev={handlePrev} 
+          />
+        </div>
 
         {/* Bottom half: Notes (Left) & Calendar Grid (Right) */}
-        <div className="flex flex-col md:flex-row w-full bg-white dark:bg-neutral-900 transition-colors duration-500 rounded-b-sm z-30 relative pt-4 pb-8 px-4 sm:px-8">
+        <div className="flex flex-col md:flex-row w-full bg-transparent z-30 relative pt-4 pb-8 px-4 sm:px-8">
           
-          {/* Notes Panel on the left (about 35% width) */}
-          <div className="w-full md:w-[35%] border-r-0 md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 mb-8 md:mb-0">
+          {/* Notes Panel on the left */}
+          <div className="w-full md:w-[35%] md:border-r border-dashed border-neutral-200/60 dark:border-neutral-800/60 pr-0 md:pr-8 mb-8 md:mb-0">
             <NotesPanel 
               selection={selection} 
               getNote={getNote}
@@ -95,7 +108,7 @@ export function CalendarLayout() {
             />
           </div>
 
-          {/* Calendar Grid on the right (about 65% width) */}
+          {/* Calendar Grid on the right */}
           <div className="w-full md:w-[65%] pl-0 md:pl-8 relative min-h-[420px]">
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
@@ -106,8 +119,8 @@ export function CalendarLayout() {
                 animate="center"
                 exit="exit"
                 transition={{
-                  x: { type: "spring", stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 }
+                  x: { type: "spring", stiffness: 200, damping: 25 },
+                  opacity: { duration: 0.3 }
                 }}
                 className="absolute inset-0 flex flex-col h-full"
               >

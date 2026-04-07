@@ -58,16 +58,16 @@ export function DayCell({
   let textClass = isWeekend ? themeClasses.text : 'text-neutral-700 dark:text-neutral-300';
   let bgClass = 'bg-transparent';
   let clipClass = '';
-  let circleClass = 'bg-transparent';
+  let circleClass = 'bg-transparent shadow-none';
 
   if (!isCurrentMonth) {
-    textClass = 'text-neutral-300 dark:text-neutral-700'; // greyed out
+    textClass = 'text-neutral-300 dark:text-neutral-700 font-light'; // greyed out
   } else if (isSelectedStart || isSelectedEnd) {
-    textClass = 'text-white font-bold';
-    circleClass = themeClasses.bg;
+    textClass = `text-white font-bold drop-shadow-md`;
+    circleClass = `${themeClasses.bg} shadow-lg ${themeClasses.shadow} scale-105`;
   } else if (isToday) {
     textClass = `${themeClasses.text} font-bold`;
-    circleClass = 'border-2 dark:border-current border-current';
+    circleClass = `bg-white dark:bg-neutral-800 border-[2px] border-current shadow-sm ${themeClasses.text}`;
   }
 
   // Rounded corners strip logic (1 for Monday, 0 for Sunday)
@@ -98,10 +98,10 @@ export function DayCell({
     }
   };
 
-  const containerClass = `relative h-16 sm:h-24 flex flex-col items-center justify-start py-1 sm:py-2 border border-transparent transition-colors ${
+  const containerClass = `group relative h-16 sm:h-24 flex flex-col items-center justify-start py-1 sm:py-2 border border-transparent transition-all duration-300 ${
     isDisabled
-      ? 'cursor-not-allowed opacity-70'
-      : 'cursor-pointer hover:border-neutral-200 dark:hover:border-neutral-700'
+      ? 'cursor-not-allowed opacity-40'
+      : 'cursor-pointer hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30'
   } ${clipClass}`;
 
   return (
@@ -114,7 +114,7 @@ export function DayCell({
     >
       {/* Background strip for range selection */}
       {(isWithinSelection || isHoverPreview) && (
-        <div className={`absolute inset-0 ${bgClass} z-0 pointer-events-none rounded-sm ${clipClass}`} />
+        <div className={`absolute inset-0 ${bgClass} ${clipClass} transition-all duration-500`} />
       )}
       
       {/* Connecting strips spanning specifically from start/end circles */}
@@ -125,9 +125,8 @@ export function DayCell({
         <div className={`absolute top-0 left-0 bottom-0 right-1/2 ${themeClasses.bgOpacity} z-0 pointer-events-none`} />
       )}
 
-      {/* Date Circle */}
-      <div className={`relative z-10 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all ${circleClass}`}>
-        <span className={textClass}>
+      <div className={`relative z-10 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all duration-300 ease-out ${circleClass} ${!isDisabled && !isSelectedStart && !isSelectedEnd ? 'group-hover:scale-110' : ''}`}>
+        <span className={`${textClass} font-outfit tracking-tight text-sm sm:text-base`}>
           {day.getDate()}
         </span>
         {/* Note Indicator Dot */}
