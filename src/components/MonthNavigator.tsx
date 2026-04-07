@@ -18,10 +18,8 @@ export function MonthNavigator({ currentMonth, onNext, onPrev }: MonthNavigatorP
   }, []);
 
   return (
-    <div className="flex items-center justify-between gap-4 pb-4 border-b border-neutral-200/70 dark:border-neutral-800/70">
-      <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-neutral-600 dark:text-neutral-400">
-        {format(currentMonth, 'MMMM yyyy')}
-      </h2>
+    <div className="flex items-center justify-end gap-2 pb-4 border-b border-neutral-200/70 dark:border-neutral-800/70">
+      <h2 className="sr-only">{format(currentMonth, 'MMMM yyyy')}</h2>
       <div className="flex items-center gap-2">
         <button
           onClick={onPrev}

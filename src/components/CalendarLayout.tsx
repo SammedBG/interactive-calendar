@@ -41,8 +41,7 @@ export function CalendarLayout() {
     prevMonth();
   };
 
-  const monthIndex = currentMonth.getMonth();
-  const themeClasses = MONTH_THEMES[monthIndex];
+  const themeClasses = MONTH_THEMES[0];
 
   // Slide animation variants
   const variants = {
@@ -65,7 +64,7 @@ export function CalendarLayout() {
   return (
     <div className="flex justify-center items-start min-h-screen bg-neutral-100 dark:bg-neutral-950 p-4 sm:p-12 font-sans overflow-y-auto">
       
-      <div className="relative flex flex-col w-full max-w-[800px] bg-white dark:bg-neutral-900 shadow-[0_20px_40px_rgba(0,0,0,0.1)] rounded-sm overflow-visible transition-colors duration-500 mt-8 mb-8">
+      <div className="relative flex flex-col w-full max-w-[640px] bg-white dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-sm overflow-visible transition-colors duration-500 mt-8 mb-8">
         
         {/* Binder / Top Handle */}
         <div className="absolute -top-4 inset-x-0 h-8 flex justify-center items-start space-x-3 sm:space-x-4 z-40">
@@ -83,12 +82,12 @@ export function CalendarLayout() {
         <HeroImage currentMonth={currentMonth} themeClasses={themeClasses} />
 
         {/* Bottom half: Notes (Left) & Calendar Grid (Right) */}
-        <div className="flex flex-col w-full bg-white dark:bg-neutral-900 z-30 relative pt-2 pb-8 px-4 sm:px-8 shadow-inner min-h-[500px] sm:min-h-[600px]">
+        <div className="flex flex-col w-full bg-neutral-50 dark:bg-neutral-900 z-30 relative pt-3 pb-10 px-4 sm:px-8 shadow-inner min-h-[500px] sm:min-h-[600px]">
           <MonthNavigator currentMonth={currentMonth} onNext={handleNext} onPrev={handlePrev} />
 
           <div className="flex flex-col md:flex-row w-full pt-4">
             {/* Notes Panel on the left */}
-            <div className="w-full md:w-[35%] md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 order-2 md:order-1">
+            <div className="w-full md:w-[35%] md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 order-2 md:order-1 mt-6 md:mt-0">
               <NotesPanel
                 selection={selection}
                 getNote={getNote}
