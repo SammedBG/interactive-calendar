@@ -2,6 +2,7 @@
 
 import { useCalendar } from '../hooks/useCalendar';
 import { useNotes } from '../hooks/useNotes';
+import { useIndianHolidays } from '../hooks/useIndianHolidays';
 import { HeroImage } from './HeroImage';
 import { MonthNavigator } from './MonthNavigator';
 import { CalendarGrid } from './CalendarGrid';
@@ -29,6 +30,7 @@ export const MONTH_THEMES: Record<number, ThemeClasses> = {
 export function CalendarLayout() {
   const { currentMonth, nextMonth, prevMonth, selection, handleDateClick, hoveredDate, setHoveredDate } = useCalendar();
   const { notesRecord, saveNote, getNote } = useNotes();
+  const holidaysMap = useIndianHolidays(currentMonth);
   const [direction, setDirection] = useState(0); // 1 = right, -1 = left
 
   const handleNext = () => {
@@ -118,6 +120,7 @@ export function CalendarLayout() {
                       hoveredDate={hoveredDate}
                       themeClasses={themeClasses}
                       notesRecord={notesRecord}
+                      holidaysMap={holidaysMap}
                       onSetHoveredDate={setHoveredDate}
                       onDateClick={handleDateClick}
                     />

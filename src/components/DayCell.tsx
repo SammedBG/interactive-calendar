@@ -10,19 +10,10 @@ export interface DayCellProps {
   themeClasses: ThemeClasses;
   hasNote: boolean;
   notePreview?: string;
+  holidayName?: string;
   onSetHoveredDate: (date: Date | null) => void;
   onClick: (date: Date) => void;
 }
-
-// 6 hardcoded Indian public holidays (fixed dates)
-const HOLIDAYS: Record<string, string> = {
-  '01-01': "New Year's Day",
-  '01-26': "Republic Day",
-  '05-01': "Labour Day",
-  '08-15': "Independence Day",
-  '10-02': "Gandhi Jayanti",
-  '12-25': "Christmas",
-};
 
 export function DayCell({
   day,
@@ -32,6 +23,7 @@ export function DayCell({
   themeClasses,
   hasNote,
   notePreview,
+  holidayName,
   onSetHoveredDate,
   onClick,
 }: DayCellProps) {
@@ -51,10 +43,6 @@ export function DayCell({
   const isToday = isSameDay(day, new Date());
   const isDisabled = !isCurrentMonth;
   
-  // Format MM-dd to check for holidays
-  const mm_dd = `${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
-  const holidayName = HOLIDAYS[mm_dd];
-
   const isWeekend = day.getDay() === 0 || day.getDay() === 6;
 
   // Visual classes computation

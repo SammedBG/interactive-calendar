@@ -12,6 +12,7 @@ interface CalendarGridProps {
   hoveredDate: Date | null;
   themeClasses: ThemeClasses;
   notesRecord: Record<string, string>;
+  holidaysMap: Record<string, string>;
   onSetHoveredDate: (d: Date | null) => void;
   onDateClick: (d: Date) => void;
 }
@@ -22,6 +23,7 @@ export function CalendarGrid({
   hoveredDate,
   themeClasses,
   notesRecord,
+  holidaysMap,
   onSetHoveredDate,
   onDateClick,
 }: CalendarGridProps) {
@@ -78,6 +80,7 @@ export function CalendarGrid({
         {daysInGrid.map(d => {
           const formattedDay = format(d, 'yyyy-MM-dd');
           const matchingNote = noteRanges.find(range => formattedDay >= range.start && formattedDay <= range.end);
+          const holidayName = holidaysMap[formattedDay];
           
           return (
             <DayCell
@@ -89,6 +92,7 @@ export function CalendarGrid({
               themeClasses={themeClasses}
               hasNote={!!matchingNote}
               notePreview={matchingNote ? matchingNote.content : undefined}
+              holidayName={holidayName}
               onSetHoveredDate={onSetHoveredDate}
               onClick={onDateClick}
             />
