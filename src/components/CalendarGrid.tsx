@@ -1,12 +1,13 @@
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, format } from 'date-fns';
 import { DayCell } from './DayCell';
 import { SelectionState } from '../hooks/useCalendar';
+import { ThemeClasses } from './CalendarLayout';
 
 interface CalendarGridProps {
   currentMonth: Date;
   selection: SelectionState;
   hoveredDate: Date | null;
-  accentColor: string;
+  themeClasses: ThemeClasses;
   notesRecord: Record<string, string>;
   onSetHoveredDate: (d: Date | null) => void;
   onDateClick: (d: Date) => void;
@@ -16,15 +17,16 @@ export function CalendarGrid({
   currentMonth,
   selection,
   hoveredDate,
-  accentColor,
+  themeClasses,
   notesRecord,
   onSetHoveredDate,
   onDateClick,
 }: CalendarGridProps) {
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
-  const startDate = startOfWeek(monthStart, { weekStartsOn: 1 });
-  const endDate = endOfWeek(monthEnd, { weekStartsOn: 1 });
+  // Revert back to Sunday start as per spec
+  const startDate = startOfWeek(monthStart, { weekStartsOn: 0 });
+  const endDate = endOfWeek(monthEnd, { weekStartsOn: 0 });
 
   const dateFormat = "E";
   const days = [];
@@ -50,9 +52,7 @@ export function CalendarGrid({
       </div>
       <div className="grid grid-cols-7 gap-y-1 sm:gap-y-2 flex-1">
         {daysInGrid.map(d => {
-          // Check if this day has a note specifically for it or a range spanning it
           const formattedDay = format(d, 'yyyy-MM-dd');
-          // Complex note checking could be done, but for simplicity, we check if there's any note key containing this date
           const hasNote = Object.keys(notesRecord).some(key => key.includes(formattedDay));
           
           return (
@@ -62,7 +62,7 @@ export function CalendarGrid({
               currentMonth={currentMonth}
               selection={selection}
               hoveredDate={hoveredDate}
-              accentColor={accentColor}
+              themeClasses={themeClasses}
               hasNote={hasNote}
               onSetHoveredDate={onSetHoveredDate}
               onClick={onDateClick}

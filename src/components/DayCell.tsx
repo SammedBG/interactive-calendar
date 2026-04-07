@@ -1,81 +1,81 @@
-import { format, isSameDay, isSameMonth, isBefore, isAfter } from 'date-fns';
+import { isSameMonth, isSameDay, isWithinInterval, isAfter, isBefore } from 'date-fns';
 import { SelectionState } from '../hooks/useCalendar';
-
-// 5-6 hardcoded public holiday markers for demo purposes
-export const HOLIDAYS: Record<string, string> = {
-  '01-01': "New Year's Day",
-  '07-04': 'Independence Day',
-  '10-31': 'Halloween',
-  '12-25': 'Christmas Day',
-  '2025-11-27': 'Thanksgiving', // specific date for demo
-};
+import { ThemeClasses } from './CalendarLayout';
 
 interface DayCellProps {
   day: Date;
   currentMonth: Date;
   selection: SelectionState;
   hoveredDate: Date | null;
-  accentColor: string;
+  themeClasses: ThemeClasses;
   hasNote: boolean;
   onSetHoveredDate: (d: Date | null) => void;
   onClick: (d: Date) => void;
 }
+
+// 5 hardcoded public holidays
+const HOLIDAYS: Record<string, string> = {
+  '01-01': "New Year's",
+  '07-04': "Independence",
+  '10-31': "Halloween",
+  '11-25': "Thanksgiving",
+  '12-25': "Christmas",
+};
 
 export function DayCell({
   day,
   currentMonth,
   selection,
   hoveredDate,
-  accentColor,
+  themeClasses,
   hasNote,
   onSetHoveredDate,
   onClick,
 }: DayCellProps) {
-  const isToday = isSameDay(day, new Date());
   const isSelectedStart = selection.start ? isSameDay(day, selection.start) : false;
   const isSelectedEnd = selection.end ? isSameDay(day, selection.end) : false;
   
-  // Calculate if the day is strictly within the selected range
-  const isWithinSelection = selection.start && selection.end 
-    ? (isAfter(day, selection.start) && isBefore(day, selection.end))
+  const isWithinSelection = selection.start && selection.end
+    ? isWithinInterval(day, { start: selection.start, end: selection.end })
     : false;
-    
-  // Calculate hover preview: if we have a start but no end, and we're hovering a date after start
-  const isHoverPreview = selection.start && !selection.end && hoveredDate 
-    ? (isAfter(day, selection.start) && isBefore(day, hoveredDate)) || (isAfter(hoveredDate, selection.start) && isSameDay(day, hoveredDate))
+
+  const isHoverPreview = (!selection.end && selection.start && hoveredDate)
+    ? (isAfter(hoveredDate, selection.start) && isWithinInterval(day, { start: selection.start, end: hoveredDate }))
+      || (isBefore(hoveredDate, selection.start) && isWithinInterval(day, { start: hoveredDate, end: selection.start }))
     : false;
 
   const isCurrentMonth = isSameMonth(day, currentMonth);
-
-  // Check for holiday string matching MM-dd or yyyy-MM-dd
-  const holiday = HOLIDAYS[format(day, 'MM-dd')] || HOLIDAYS[format(day, 'yyyy-MM-dd')];
+  const isToday = isSameDay(day, new Date());
+  
+  // Format MM-dd to check for holidays
+  const mm_dd = `${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+  const holidayName = HOLIDAYS[mm_dd];
 
   // Visual classes computation
-  let bgClass = '';
-  let textClass = isCurrentMonth ? 'text-neutral-800 dark:text-neutral-100' : 'text-neutral-300 dark:text-neutral-600';
-  let zIndex = 'z-0';
+  let textClass = 'text-neutral-700 dark:text-neutral-300';
+  let bgClass = 'bg-transparent';
   let clipClass = '';
+  let circleClass = 'bg-transparent';
 
-  if (isSelectedStart || isSelectedEnd) {
+  if (!isCurrentMonth) {
+    textClass = 'text-neutral-300 dark:text-neutral-700'; // greyed out
+  } else if (isSelectedStart || isSelectedEnd) {
     textClass = 'text-white font-bold';
-    zIndex = 'z-20';
-  } else if (isWithinSelection || isHoverPreview) {
-    textClass = isCurrentMonth ? 'text-neutral-800 dark:text-neutral-100' : 'text-neutral-500 dark:text-neutral-500';
-    zIndex = 'z-10';
+    circleClass = themeClasses.bg;
   } else if (isToday) {
-    textClass = 'text-rose-600 dark:text-rose-400 font-bold';
+    textClass = `${themeClasses.text} font-bold`;
+    circleClass = 'border-2 dark:border-current border-current';
   }
 
-  // Calculate rounded corners for the continuous strip
+  // Rounded corners strip logic (0 for Sunday, 6 for Saturday)
   if (isWithinSelection || isHoverPreview) {
-    bgClass = 'bg-opacity-20';
-    if (day.getDay() === 1) clipClass = 'rounded-l-lg'; // Monday
-    if (day.getDay() === 0) clipClass = 'rounded-r-lg'; // Sunday
+    bgClass = themeClasses.bgOpacity;
+    if (day.getDay() === 0) clipClass = 'rounded-l-lg'; // Sunday
+    if (day.getDay() === 6) clipClass = 'rounded-r-lg'; // Saturday
   }
 
-  // When hover preview starts and we hover the actual start date, the start circle should show strip correctly
-  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 0;
-  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 1 && selection.start && isBefore(selection.start, day);
+  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 6;
+  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 0 && selection.start && isBefore(selection.start, day);
 
   return (
     <div 
@@ -84,41 +84,35 @@ export function DayCell({
       onMouseLeave={() => onSetHoveredDate(null)}
       onClick={() => onClick(day)}
     >
-      {/* Selection Strip Background */}
-      {(isWithinSelection || isHoverPreview || showRightStrip || showLeftStrip) && (
-        <div 
-          className={`absolute inset-y-1 sm:inset-y-2 opacity-10 dark:opacity-20 transition-all`}
-          style={{ 
-            backgroundColor: accentColor,
-            left: showLeftStrip || isWithinSelection || isHoverPreview ? '0' : '50%',
-            right: showRightStrip || isWithinSelection || isHoverPreview ? '0' : '50%',
-            borderRadius: isHoverPreview && isSameDay(day, hoveredDate!) ? '0 9999px 9999px 0' : '0'
-          }}
-        />
+      {/* Background strip for range selection */}
+      {(isWithinSelection || isHoverPreview) && (
+        <div className={`absolute inset-0 ${bgClass} z-0 pointer-events-none rounded-sm ${clipClass}`} />
+      )}
+      
+      {/* Connecting strips spanning specifically from start/end circles */}
+      {showRightStrip && (
+        <div className={`absolute top-0 right-0 bottom-0 left-1/2 ${themeClasses.bgOpacity} z-0 pointer-events-none`} />
+      )}
+      {showLeftStrip && (
+        <div className={`absolute top-0 left-0 bottom-0 right-1/2 ${themeClasses.bgOpacity} z-0 pointer-events-none`} />
       )}
 
-      {/* Day Circle / Highlight */}
-      <div 
-        className={`relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-all ${textClass} ${zIndex}`}
-        style={{
-          backgroundColor: (isSelectedStart || isSelectedEnd) ? accentColor : undefined,
-          boxShadow: (isSelectedStart || isSelectedEnd) ? `0 4px 12px ${accentColor}40` : undefined,
-        }}
-      >
-        {isToday && !isSelectedStart && !isSelectedEnd && (
-          <div className="absolute inset-0 border-2 border-rose-500 rounded-full" />
+      {/* Date Circle */}
+      <div className={`relative z-10 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all ${circleClass}`}>
+        <span className={textClass}>
+          {day.getDate()}
+        </span>
+        {/* Note Indicator Dot */}
+        {hasNote && !isSelectedStart && !isSelectedEnd && (
+          <div className={`absolute -bottom-1 w-1.5 h-1.5 rounded-full ${themeClasses.bg}`} />
         )}
-        {format(day, 'd')}
       </div>
 
-      {hasNote && (
-        <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentColor }} />
-      )}
-
-      {holiday && isCurrentMonth && (
-        <div className="absolute bottom-1 px-1 left-0 right-0 text-center text-[10px] sm:text-xs text-neutral-400 dark:text-neutral-500 truncate leading-tight">
-          {holiday}
-        </div>
+      {/* Holiday Label */}
+      {holidayName && (
+        <span className="relative z-10 mt-1 sm:mt-2 text-[10px] sm:text-xs text-neutral-500 font-medium truncate max-w-[90%] pointer-events-none text-center">
+          {holidayName}
+        </span>
       )}
     </div>
   );
