@@ -72,15 +72,15 @@ export function DayCell({
     circleClass = `bg-white dark:bg-neutral-800 border-[2px] border-current shadow-sm ${themeClasses.text}`;
   }
 
-  // Rounded corners strip logic (0 for Sunday, 6 for Saturday)
+  // Rounded corners strip logic (1 for Monday, 0 for Sunday)
   if (isWithinSelection || isHoverPreview) {
     bgClass = themeClasses.bgOpacity;
-    if (day.getDay() === 0) clipClass = 'rounded-l-lg'; // Sunday
-    if (day.getDay() === 6) clipClass = 'rounded-r-lg'; // Saturday
+    if (day.getDay() === 1) clipClass = 'rounded-l-lg'; // Monday
+    if (day.getDay() === 0) clipClass = 'rounded-r-lg'; // Sunday
   }
 
-  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 6; // Don't show right strip if it's Saturday
-  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 0 && selection.start && isBefore(selection.start, day); // Don't show left strip if it's Sunday
+  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 0; // Don't show right strip if it's Sunday
+  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 1 && selection.start && isBefore(selection.start, day); // Don't show left strip if it's Monday
 
   const handleMouseEnter = () => {
     if (!isDisabled) {
@@ -100,7 +100,7 @@ export function DayCell({
     }
   };
 
-  const containerClass = `group relative h-16 sm:h-20 flex flex-col items-center justify-start py-1 sm:py-1.5 border border-transparent transition-all duration-300 ${
+  const containerClass = `group relative w-full min-h-[44px] sm:min-h-[52px] flex flex-col items-center justify-start py-1 border border-transparent transition-all duration-300 ${
     isDisabled
       ? 'cursor-not-allowed opacity-40'
       : 'cursor-pointer hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30'
@@ -127,13 +127,13 @@ export function DayCell({
         <div className={`absolute top-0 left-0 bottom-0 right-1/2 ${themeClasses.bgOpacity} z-0 pointer-events-none`} />
       )}
       {/* Date Circle */}
-      <div className={`relative z-10 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all duration-300 ease-out ${circleClass} ${!isDisabled && !isSelectedStart && !isSelectedEnd ? 'group-hover:scale-110' : ''}`}>
-        <span className={`${textClass} tracking-tight text-sm sm:text-base`}>
+      <div className={`relative z-10 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-all duration-300 ease-out ${circleClass} ${!isDisabled && !isSelectedStart && !isSelectedEnd ? 'group-hover:scale-105' : ''}`}>
+        <span className={`${textClass} tracking-tight text-[11px] sm:text-[12px]`}>
           {day.getDate()}
         </span>
         {/* Note Indicator Dot */}
         {hasNote && (
-          <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 ${themeClasses.bg} rounded-full border-2 border-white dark:border-neutral-900 shadow-sm`} />
+          <div className={`absolute -top-1 -right-1 w-2 h-2 ${themeClasses.bg} rounded-full border-2 border-white dark:border-neutral-900 shadow-sm`} />
         )}
       </div>
 

@@ -25,9 +25,9 @@ body {
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0px,
-      transparent 31px,
-      rgba(15, 23, 42, 0.08) 31px,
-      rgba(15, 23, 42, 0.08) 32px
+      transparent 23px,
+      rgba(15, 23, 42, 0.08) 23px,
+      rgba(15, 23, 42, 0.08) 24px
     );
     background-attachment: local;
   }
@@ -36,9 +36,9 @@ body {
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0px,
-      transparent 31px,
-      rgba(148, 163, 184, 0.25) 31px,
-      rgba(148, 163, 184, 0.25) 32px
+      transparent 23px,
+      rgba(148, 163, 184, 0.25) 23px,
+      rgba(148, 163, 184, 0.25) 24px
     );
   }
 }

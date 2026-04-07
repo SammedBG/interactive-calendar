@@ -14,7 +14,7 @@ export function HeroImage({ currentMonth, themeClasses }: HeroImageProps) {
   const yearLabel = format(currentMonth, 'yyyy');
 
   return (
-    <div className="relative w-full h-[350px] sm:h-[400px] flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 rounded-t-sm z-10">
+    <div className="relative w-full aspect-square sm:aspect-[4/3] flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 rounded-t-[4px] z-10">
       <Image
         src={HERO_IMAGE_URL}
         alt={`${monthLabel} hero image`}
@@ -27,9 +27,9 @@ export function HeroImage({ currentMonth, themeClasses }: HeroImageProps) {
       <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-black/50 to-transparent z-10" />
 
       {/* Flat angular chevron overlay at the bottom */}
-      <div className="absolute bottom-0 inset-x-0 z-10 transform translate-y-[1px]">
+      <div className="absolute bottom-0 inset-x-0 z-10 translate-y-[1px] h-[25%]">
         {/* Exact Geometric V-shape matches the original physical layout */}
-        <svg viewBox="0 0 1440 320" className="w-full h-40 text-white dark:text-neutral-900 transition-colors duration-500" preserveAspectRatio="none">
+        <svg viewBox="0 0 1440 320" className="w-full h-full text-white dark:text-neutral-900 transition-colors duration-500" preserveAspectRatio="none">
           {/* Accent colored angled V-band */}
           <path 
             fill="currentColor"
@@ -44,11 +44,11 @@ export function HeroImage({ currentMonth, themeClasses }: HeroImageProps) {
         </svg>
 
         {/* Text inside the right side of the blue chevron */}
-        <div className="absolute bottom-12 right-6 sm:right-12 z-20 text-white text-right">
-          <div className="text-xs sm:text-sm font-semibold tracking-[0.35em]">
+        <div className="absolute bottom-6 right-6 sm:right-10 z-20 text-white text-right">
+          <div className="text-[10px] sm:text-xs font-semibold tracking-[0.35em]">
             {yearLabel}
           </div>
-          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-[0.25em]">
+          <div className="text-xl sm:text-2xl lg:text-3xl font-bold uppercase tracking-[0.3em]">
             {monthLabel}
           </div>
         </div>

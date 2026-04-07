@@ -12,7 +12,7 @@ import { useState } from 'react';
 export type ThemeClasses = { bg: string; text: string; ring: string; shadow: string; border: string; bgOpacity: string; };
 
 export const MONTH_THEMES: Record<number, ThemeClasses> = {
-  0: { bg: 'bg-blue-500', text: 'text-blue-500', ring: 'focus:ring-blue-500', shadow: 'shadow-[0_4px_12px_rgba(59,130,246,0.4)]', border: 'border-blue-500', bgOpacity: 'bg-blue-500/20' },
+  0: { bg: 'bg-[#1b9cfc]', text: 'text-[#1b9cfc]', ring: 'focus:ring-[#1b9cfc]', shadow: 'shadow-[0_6px_14px_rgba(27,156,252,0.35)]', border: 'border-[#1b9cfc]', bgOpacity: 'bg-[#1b9cfc]/12' },
   1: { bg: 'bg-pink-500', text: 'text-pink-500', ring: 'focus:ring-pink-500', shadow: 'shadow-[0_4px_12px_rgba(236,72,153,0.4)]', border: 'border-pink-500', bgOpacity: 'bg-pink-500/20' },
   2: { bg: 'bg-green-500', text: 'text-green-500', ring: 'focus:ring-green-500', shadow: 'shadow-[0_4px_12px_rgba(34,197,94,0.4)]', border: 'border-green-500', bgOpacity: 'bg-green-500/20' },
   3: { bg: 'bg-yellow-500', text: 'text-yellow-500', ring: 'focus:ring-yellow-500', shadow: 'shadow-[0_4px_12px_rgba(234,179,8,0.4)]', border: 'border-yellow-500', bgOpacity: 'bg-yellow-500/20' },
@@ -64,11 +64,11 @@ export function CalendarLayout() {
   return (
     <div className="flex justify-center items-start min-h-screen bg-neutral-100 dark:bg-neutral-950 p-4 sm:p-12 font-sans overflow-y-auto">
       
-      <div className="relative flex flex-col w-full max-w-[640px] bg-white dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800 shadow-[0_20px_40px_rgba(0,0,0,0.12)] rounded-sm overflow-visible transition-colors duration-500 mt-8 mb-8">
+      <div className="relative flex flex-col w-full max-w-[580px] bg-white dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800 shadow-[0_40px_60px_-15px_rgba(0,0,0,0.2)] rounded-[4px] overflow-visible transition-colors duration-500 mt-8 mb-8">
         
         {/* Binder / Top Handle */}
         <div className="absolute -top-4 inset-x-0 h-8 flex justify-center items-start space-x-3 sm:space-x-4 z-40">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(24)].map((_, i) => (
             <div key={i} className="relative w-2 sm:w-2.5 flex flex-col items-center">
               {/* Desk hole */}
               <div className="w-full h-2.5 bg-neutral-800 dark:bg-black rounded-full" />
@@ -82,7 +82,7 @@ export function CalendarLayout() {
         <HeroImage currentMonth={currentMonth} themeClasses={themeClasses} />
 
         {/* Bottom half: Notes (Left) & Calendar Grid (Right) */}
-        <div className="flex flex-col w-full bg-neutral-50 dark:bg-neutral-900 z-30 relative pt-3 pb-10 px-4 sm:px-8 shadow-inner min-h-[500px] sm:min-h-[600px]">
+        <div className="flex flex-col w-full bg-white dark:bg-neutral-900 z-30 relative pt-3 pb-10 px-5 sm:px-10 min-h-[500px] sm:min-h-[600px]">
           <MonthNavigator currentMonth={currentMonth} onNext={handleNext} onPrev={handlePrev} />
 
           <div className="flex flex-col md:flex-row w-full pt-4">
