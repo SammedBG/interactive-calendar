@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { SelectionState } from '../hooks/useCalendar';
+import { ThemeClasses } from './CalendarLayout';
 
 interface NotesPanelProps {
   selection: SelectionState;
-  accentColor: string;
+  themeClasses: ThemeClasses;
   getNote: (key: string) => string;
   saveNote: (key: string, content: string) => void;
 }
 
-export function NotesPanel({ selection, accentColor, getNote, saveNote }: NotesPanelProps) {
+export function NotesPanel({ selection, themeClasses, getNote, saveNote }: NotesPanelProps) {
   const [content, setContent] = useState('');
   
-  // Format the key as required: "note_{start}_{end}" or "note_{start}"
   const noteKey = selection.start
     ? selection.end
       ? `note_${format(selection.start, 'yyyy-MM-dd')}_${format(selection.end, 'yyyy-MM-dd')}`
@@ -33,21 +33,29 @@ export function NotesPanel({ selection, accentColor, getNote, saveNote }: NotesP
     }
   };
 
+  if (!selection.start) {
+    return (
+      <div className="p-4 sm:p-6 text-neutral-400 dark:text-neutral-500 italic text-sm border-t border-neutral-200 dark:border-neutral-800">
+        Select a date or range to add notes.
+      </div>
+    );
+  }
+
+  const label = selection.end
+    ? `Notes for ${format(selection.start, 'MMM d')} – ${format(selection.end, 'MMM d')}`
+    : `Notes for ${format(selection.start, 'MMM d')}`;
+
   return (
-    <div className="flex flex-col h-full transition-opacity animate-in fade-in duration-300">
-      <h3 className="text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-4 uppercase tracking-wide">
-        Notes {selection.start ? (selection.end ? `(${format(selection.start!, 'M/d')} - ${format(selection.end!, 'M/d')})` : `(${format(selection.start!, 'M/d')})`) : ''}
-      </h3>
+    <div className="p-4 sm:p-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col gap-3 transition-opacity animate-in fade-in slide-in-from-bottom-4 duration-300">
+      <label className="text-sm font-semibold text-neutral-800 dark:text-neutral-200 flex items-center gap-2">
+        <div className={`w-2 h-2 rounded-full ${themeClasses.bg}`} />
+        {label}
+      </label>
       <textarea
         value={content}
         onChange={handleChange}
-        placeholder="Type here..."
-        className="w-full flex-1 min-h-[250px] resize-none bg-transparent text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none leading-[32px] border-none p-0"
-        style={{ 
-          backgroundImage: `repeating-linear-gradient(transparent, transparent 31px, #e5e5e5 31px, #e5e5e5 32px)`,
-          backgroundAttachment: 'local'
-        }}
-        spellCheck="false"
+        placeholder="Type your notes here... (Saved automatically)"
+        className={`w-full min-h-[100px] resize-y p-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 placeholder-neutral-400 focus:outline-none focus:ring-2 ${themeClasses.ring} transition-all shadow-inner`}
       />
     </div>
   );
