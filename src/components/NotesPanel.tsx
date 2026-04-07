@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import { format } from 'date-fns';
 import { SelectionState } from '../hooks/useCalendar';
 import { ThemeClasses } from './CalendarLayout';
@@ -25,7 +25,7 @@ export function NotesPanel({ selection, themeClasses, getNote, saveNote }: Notes
     }
   }, [noteKey, getNote]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value;
     setContent(val);
     if (noteKey) {

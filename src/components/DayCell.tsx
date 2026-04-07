@@ -46,6 +46,7 @@ export function DayCell({
 
   const isCurrentMonth = isSameMonth(day, currentMonth);
   const isToday = isSameDay(day, new Date());
+  const isDisabled = !isCurrentMonth;
   
   // Format MM-dd to check for holidays
   const mm_dd = `${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
@@ -77,12 +78,37 @@ export function DayCell({
   const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 6;
   const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 0 && selection.start && isBefore(selection.start, day);
 
+  const handleMouseEnter = () => {
+    if (!isDisabled) {
+      onSetHoveredDate(day);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isDisabled) {
+      onSetHoveredDate(null);
+    }
+  };
+
+  const handleClick = () => {
+    if (!isDisabled) {
+      onClick(day);
+    }
+  };
+
+  const containerClass = `relative h-16 sm:h-24 flex flex-col items-center justify-start py-1 sm:py-2 border border-transparent transition-colors ${
+    isDisabled
+      ? 'cursor-not-allowed opacity-70'
+      : 'cursor-pointer hover:border-neutral-200 dark:hover:border-neutral-700'
+  } ${clipClass}`;
+
   return (
-    <div 
-      className={`relative h-16 sm:h-24 flex flex-col items-center justify-start py-1 sm:py-2 cursor-pointer transition-colors border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700 ${clipClass}`}
-      onMouseEnter={() => onSetHoveredDate(day)}
-      onMouseLeave={() => onSetHoveredDate(null)}
-      onClick={() => onClick(day)}
+    <div
+      className={containerClass}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
+      aria-disabled={isDisabled}
     >
       {/* Background strip for range selection */}
       {(isWithinSelection || isHoverPreview) && (

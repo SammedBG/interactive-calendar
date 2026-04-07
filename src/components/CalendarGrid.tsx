@@ -1,4 +1,4 @@
-import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, format } from 'date-fns';
+import { addDays, eachDayOfInterval, format, startOfMonth, startOfWeek } from 'date-fns';
 import { DayCell } from './DayCell';
 import { SelectionState } from '../hooks/useCalendar';
 import { ThemeClasses } from './CalendarLayout';
@@ -26,10 +26,9 @@ export function CalendarGrid({
   onDateClick,
 }: CalendarGridProps) {
   const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(monthStart);
   // Revert back to Sunday start as per spec
   const startDate = startOfWeek(monthStart, { weekStartsOn: 0 });
-  const endDate = endOfWeek(monthEnd, { weekStartsOn: 0 });
+  const endDate = addDays(startDate, 41);
 
   const dateFormat = "E";
   const days = [];
@@ -45,7 +44,7 @@ export function CalendarGrid({
     day = new Date(day.setDate(day.getDate() + 1));
   }
 
-  // Generate days in the grid
+  // Generate days in a fixed 6-week grid
   const daysInGrid = eachDayOfInterval({ start: startDate, end: endDate });
   const noteRanges = Object.entries(notesRecord).reduce((acc, [key, value]) => {
     if (!value || value.trim() === '') {

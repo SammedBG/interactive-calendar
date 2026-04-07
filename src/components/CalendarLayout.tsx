@@ -78,7 +78,7 @@ export function CalendarLayout() {
             onPrev={handlePrev} 
           />
 
-          <div className="relative flex-1 overflow-hidden" style={{ minHeight: '380px' }}>
+          <div className="relative flex-1 overflow-hidden min-h-[380px]">
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
                 key={currentMonth.toISOString()}
