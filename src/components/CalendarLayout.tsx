@@ -43,21 +43,27 @@ export function CalendarLayout() {
   const monthIndex = currentMonth.getMonth();
   const themeClasses = MONTH_THEMES[monthIndex];
 
-  // Animation variants
+  // 3D Page flip animation variants
   const variants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0
+      rotateX: direction > 0 ? -90 : 90,
+      opacity: 0,
+      transformOrigin: 'top',
+      z: 100
     }),
     center: {
       zIndex: 1,
-      x: 0,
-      opacity: 1
+      rotateX: 0,
+      opacity: 1,
+      transformOrigin: 'top',
+      z: 0
     },
     exit: (direction: number) => ({
       zIndex: 0,
-      x: direction < 0 ? 300 : -300,
-      opacity: 0
+      rotateX: direction < 0 ? -90 : 90,
+      opacity: 0,
+      transformOrigin: 'bottom',
+      z: 100
     })
   };
 
@@ -119,10 +125,10 @@ export function CalendarLayout() {
                 animate="center"
                 exit="exit"
                 transition={{
-                  x: { type: "spring", stiffness: 200, damping: 25 },
+                  rotateX: { type: "spring", stiffness: 100, damping: 20 },
                   opacity: { duration: 0.3 }
                 }}
-                className="absolute inset-0 flex flex-col h-full"
+                className="absolute inset-0 flex flex-col h-full perspective-[1000px]"
               >
                 <CalendarGrid 
                   currentMonth={currentMonth}

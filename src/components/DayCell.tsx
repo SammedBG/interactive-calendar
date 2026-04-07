@@ -2,15 +2,16 @@ import { isSameMonth, isSameDay, isWithinInterval, isAfter, isBefore } from 'dat
 import { SelectionState } from '../hooks/useCalendar';
 import { ThemeClasses } from './CalendarLayout';
 
-interface DayCellProps {
+export interface DayCellProps {
   day: Date;
   currentMonth: Date;
   selection: SelectionState;
   hoveredDate: Date | null;
   themeClasses: ThemeClasses;
   hasNote: boolean;
-  onSetHoveredDate: (d: Date | null) => void;
-  onClick: (d: Date) => void;
+  notePreview?: string;
+  onSetHoveredDate: (date: Date | null) => void;
+  onClick: (date: Date) => void;
 }
 
 // 5 hardcoded public holidays
@@ -29,6 +30,7 @@ export function DayCell({
   hoveredDate,
   themeClasses,
   hasNote,
+  notePreview,
   onSetHoveredDate,
   onClick,
 }: DayCellProps) {
@@ -124,18 +126,28 @@ export function DayCell({
       {showLeftStrip && (
         <div className={`absolute top-0 left-0 bottom-0 right-1/2 ${themeClasses.bgOpacity} z-0 pointer-events-none`} />
       )}
-
+      {/* Date Circle */}
       <div className={`relative z-10 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all duration-300 ease-out ${circleClass} ${!isDisabled && !isSelectedStart && !isSelectedEnd ? 'group-hover:scale-110' : ''}`}>
         <span className={`${textClass} font-outfit tracking-tight text-sm sm:text-base`}>
           {day.getDate()}
         </span>
         {/* Note Indicator Dot */}
-        {hasNote && !isSelectedStart && !isSelectedEnd && (
-          <div className={`absolute -bottom-1 w-1.5 h-1.5 rounded-full ${themeClasses.bg}`} />
+        {hasNote && (
+          <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-yellow-400 rounded-full border-2 border-white dark:border-neutral-900 shadow-sm" />
         )}
       </div>
 
-      {/* Holiday Label */}
+      {/* Tooltip for note hover */}
+      {hasNote && notePreview && !isDisabled && (
+        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100">
+          <div className="bg-neutral-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-neutral-900 text-xs px-3 py-2 rounded-lg shadow-xl max-w-[150px] sm:max-w-[200px] truncate">
+            {notePreview}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-neutral-900/90 dark:border-t-white/90" />
+          </div>
+        </div>
+      )}
+
+      {/* Holiday Text */}
       {holidayName && (
         <span className="relative z-10 mt-1 sm:mt-2 text-[10px] sm:text-xs text-neutral-500 font-medium truncate max-w-[90%] pointer-events-none text-center">
           {holidayName}
