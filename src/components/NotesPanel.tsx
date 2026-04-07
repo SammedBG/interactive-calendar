@@ -1,16 +1,13 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
 import { format } from 'date-fns';
 import { SelectionState } from '../hooks/useCalendar';
-import { ThemeClasses } from './CalendarLayout';
-
 interface NotesPanelProps {
   selection: SelectionState;
-  themeClasses: ThemeClasses;
   getNote: (key: string) => string;
   saveNote: (key: string, content: string) => void;
 }
 
-export function NotesPanel({ selection, themeClasses, getNote, saveNote }: NotesPanelProps) {
+export function NotesPanel({ selection, getNote, saveNote }: NotesPanelProps) {
   const [content, setContent] = useState('');
   
   const noteKey = selection.start

@@ -3,7 +3,6 @@
 import { useCalendar } from '../hooks/useCalendar';
 import { useNotes } from '../hooks/useNotes';
 import { HeroImage } from './HeroImage';
-import { MonthNavigator } from './MonthNavigator';
 import { CalendarGrid } from './CalendarGrid';
 import { NotesPanel } from './NotesPanel';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -91,7 +90,6 @@ export function CalendarLayout() {
           <div className="w-full md:w-[35%] border-r-0 md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 mb-8 md:mb-0">
             <NotesPanel 
               selection={selection} 
-              themeClasses={themeClasses} 
               getNote={getNote}
               saveNote={saveNote}
             />
