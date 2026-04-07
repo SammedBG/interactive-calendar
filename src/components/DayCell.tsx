@@ -44,6 +44,7 @@ export function DayCell({
   const isDisabled = !isCurrentMonth;
   
   const isWeekend = day.getDay() === 0 || day.getDay() === 6;
+  const showTooltip = !isDisabled && (holidayName || (hasNote && notePreview));
 
   // Visual classes computation
   let textClass = isWeekend ? themeClasses.text : 'text-neutral-700 dark:text-neutral-300';
@@ -126,11 +127,16 @@ export function DayCell({
         )}
       </div>
 
-      {/* Tooltip for note hover */}
-      {hasNote && notePreview && !isDisabled && (
+      {/* Tooltip for holiday or note hover */}
+      {showTooltip && (
         <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100">
-          <div className="bg-neutral-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-neutral-900 text-xs px-3 py-2 rounded-lg shadow-xl max-w-[150px] sm:max-w-[200px] truncate">
-            {notePreview}
+          <div className="bg-neutral-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-neutral-900 text-[11px] px-3 py-2 rounded-lg shadow-xl max-w-[170px] sm:max-w-[220px]">
+            {holidayName && (
+              <div className="font-semibold uppercase tracking-wide truncate">{holidayName}</div>
+            )}
+            {notePreview && (
+              <div className="text-[11px] opacity-90 truncate">{notePreview}</div>
+            )}
             <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-neutral-900/90 dark:border-t-white/90" />
           </div>
         </div>
