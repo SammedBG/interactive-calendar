@@ -4,29 +4,43 @@ export function useNotes() {
   const [notesRecord, setNotesRecord] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    // Load all notes from localStorage on mount.
-    // They are prefixed with 'note_'
-    const loadedNotes: Record<string, string> = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith('note_')) {
-        loadedNotes[key] = localStorage.getItem(key) || '';
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const loadedNotes: Record<string, string> = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('note_')) {
+            loadedNotes[key] = localStorage.getItem(key) || '';
+          }
+        }
+        setNotesRecord(loadedNotes);
       }
+    } catch (e) {
+      // localStorage is unavailable or blocked
     }
-    setNotesRecord(loadedNotes);
   }, []);
 
   const saveNote = useCallback((key: string, content: string) => {
-    if (content.trim() === '') {
-      localStorage.removeItem(key);
-      setNotesRecord(prev => {
-        const next = { ...prev };
+    setNotesRecord(prev => {
+      const next = { ...prev };
+      if (content.trim() === '') {
         delete next[key];
-        return next;
-      });
-    } else {
-      localStorage.setItem(key, content);
-      setNotesRecord(prev => ({ ...prev, [key]: content }));
+      } else {
+        next[key] = content;
+      }
+      return next;
+    });
+
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        if (content.trim() === '') {
+          localStorage.removeItem(key);
+        } else {
+          localStorage.setItem(key, content);
+        }
+      }
+    } catch (e) {
+      // localStorage unavailable
     }
   }, []);
 
