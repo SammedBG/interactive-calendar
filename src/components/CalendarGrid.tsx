@@ -27,17 +27,18 @@ export function CalendarGrid({
 }: CalendarGridProps) {
   const monthStart = startOfMonth(currentMonth);
   // Revert back to Sunday start as per spec
-  const startDate = startOfWeek(monthStart, { weekStartsOn: 0 });
+  const startDate = startOfWeek(monthStart, { weekStartsOn: 1 });
   const endDate = addDays(startDate, 41);
 
   const dateFormat = "E";
   const days = [];
   let day = startDate;
 
-  // Add Day Headers (Sun-Sat)
+  // Add Day Headers (Mon-Sun)
   for (let i = 0; i < 7; i++) {
+    const isWeekend = i === 5 || i === 6;
     days.push(
-      <div key={i} className="text-center font-medium text-sm text-neutral-400 dark:text-neutral-500 py-3 uppercase tracking-wider">
+      <div key={i} className={`text-center font-bold text-[10px] sm:text-xs py-3 uppercase tracking-wider ${isWeekend ? themeClasses.text : 'text-neutral-800 dark:text-neutral-300'}`}>
         {format(day, dateFormat).substring(0, 3)}
       </div>
     );

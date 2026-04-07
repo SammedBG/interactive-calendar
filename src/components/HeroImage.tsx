@@ -1,8 +1,15 @@
 import Image from 'next/image';
 import { format } from 'date-fns';
+import { ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useState, useEffect } from 'react';
+import { ThemeClasses } from './CalendarLayout';
 
 export interface HeroImageProps {
   currentMonth: Date;
+  themeClasses: ThemeClasses;
+  onNext: () => void;
+  onPrev: () => void;
 }
 
 const MONTH_IMAGES = [
@@ -20,26 +27,79 @@ const MONTH_IMAGES = [
   'https://images.unsplash.com/photo-1544261453-24151fb4ad0c?q=80&w=800&auto=format&fit=crop', // Dec (Winter evening)
 ];
 
-export function HeroImage({ currentMonth }: HeroImageProps) {
+export function HeroImage({ currentMonth, themeClasses, onNext, onPrev }: HeroImageProps) {
   const monthIndex = currentMonth.getMonth();
   const imageUrl = MONTH_IMAGES[monthIndex];
 
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <div className="relative w-full h-[200px] md:h-full md:w-[40%] flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 md:self-stretch">
+    <div className="relative w-full h-[350px] sm:h-[400px] flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 rounded-t-sm z-10">
       <Image
         src={imageUrl}
         alt={`${format(currentMonth, 'MMMM')} hero image`}
         fill
-        sizes="(min-width: 768px) 40vw, 100vw"
-        className="object-cover"
+        sizes="(min-width: 768px) 800px, 100vw"
+        className="object-cover transition-all duration-1000 ease-in-out"
+        priority
       />
-      <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/60 to-transparent flex items-end md:items-start md:justify-end flex-col p-6 z-10 text-white transition-all">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight drop-shadow-lg uppercase tracking-wider">
-          {format(currentMonth, 'MMMM')}
-        </h1>
-        <p className="text-xl md:text-2xl font-light text-white/80 drop-shadow-md">
-          {format(currentMonth, 'yyyy')}
-        </p>
+      
+      {/* Dark gradient overlay for top navbar */}
+      <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-black/50 to-transparent z-10" />
+
+      {/* Top Navbar */}
+      <div className="absolute top-6 right-6 z-20 flex space-x-2">
+        <button
+          onClick={onPrev}
+          className="p-2 w-11 h-11 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/40 text-white backdrop-blur-md transition-colors"
+          aria-label="Previous month"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          onClick={onNext}
+          className="p-2 w-11 h-11 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/40 text-white backdrop-blur-md transition-colors"
+          aria-label="Next month"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+        <div className="w-2" />
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="p-2 rounded-full bg-black/20 hover:bg-black/40 text-white backdrop-blur-md transition-colors w-11 h-11 flex items-center justify-center"
+          aria-label="Toggle theme"
+        >
+          {mounted && (theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
+        </button>
+      </div>
+
+      {/* Wavy overlay at the bottom */}
+      <div className="absolute bottom-0 inset-x-0 z-10 transform translate-y-[2px]">
+        {/* SVG Wave/Chevron matching the style of the image */}
+        <svg viewBox="0 0 1440 320" className="w-full text-white dark:text-neutral-900 transition-colors duration-500" preserveAspectRatio="none" style={{ height: '140px' }}>
+          {/* Accent colored angled band behind the wave using current class */}
+          <path 
+            fill="currentColor"
+            className={`${themeClasses.text} transition-colors duration-500 ease-in-out`}
+            d="M0,192L480,288L960,64L1440,256L1440,320L960,320L480,320L0,320Z"
+          ></path>
+          {/* Main White/Dark Background cut-out representing the bottom page */}
+          <path 
+            fill="currentColor" 
+            d="M0,256L480,320L960,192L1440,288L1440,320L960,320L480,320L0,320Z"
+          ></path>
+        </svg>
+
+        {/* Text inside the shape */}
+        <div className="absolute bottom-6 right-8 sm:right-12 z-20 text-white text-right drop-shadow-md">
+          <div className="text-xl sm:text-2xl font-light tracking-widest">{format(currentMonth, 'yyyy')}</div>
+          <div className="text-3xl sm:text-5xl font-bold uppercase tracking-wider">{format(currentMonth, 'MMMM')}</div>
+        </div>
       </div>
     </div>
   );

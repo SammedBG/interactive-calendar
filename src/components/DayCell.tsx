@@ -52,8 +52,10 @@ export function DayCell({
   const mm_dd = `${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
   const holidayName = HOLIDAYS[mm_dd];
 
+  const isWeekend = day.getDay() === 0 || day.getDay() === 6;
+
   // Visual classes computation
-  let textClass = 'text-neutral-700 dark:text-neutral-300';
+  let textClass = isWeekend ? themeClasses.text : 'text-neutral-700 dark:text-neutral-300';
   let bgClass = 'bg-transparent';
   let clipClass = '';
   let circleClass = 'bg-transparent';
@@ -68,15 +70,15 @@ export function DayCell({
     circleClass = 'border-2 dark:border-current border-current';
   }
 
-  // Rounded corners strip logic (0 for Sunday, 6 for Saturday)
+  // Rounded corners strip logic (1 for Monday, 0 for Sunday)
   if (isWithinSelection || isHoverPreview) {
     bgClass = themeClasses.bgOpacity;
-    if (day.getDay() === 0) clipClass = 'rounded-l-lg'; // Sunday
-    if (day.getDay() === 6) clipClass = 'rounded-r-lg'; // Saturday
+    if (day.getDay() === 1) clipClass = 'rounded-l-lg'; // Monday
+    if (day.getDay() === 0) clipClass = 'rounded-r-lg'; // Sunday
   }
 
-  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 6;
-  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 0 && selection.start && isBefore(selection.start, day);
+  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 0; // Don't show right strip if it's Sunday
+  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 1 && selection.start && isBefore(selection.start, day); // Don't show left strip if it's Monday
 
   const handleMouseEnter = () => {
     if (!isDisabled) {

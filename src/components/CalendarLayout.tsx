@@ -63,22 +63,42 @@ export function CalendarLayout() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-neutral-100 dark:bg-neutral-950 p-4 sm:p-8 font-sans">
-      <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white dark:bg-neutral-900 shadow-2xl rounded-2xl overflow-hidden min-h-[600px] border border-neutral-200 dark:border-neutral-800 transition-colors duration-500">
+    <div className="flex justify-center items-start min-h-screen bg-neutral-200 dark:bg-neutral-950 p-4 sm:p-12 font-sans overflow-y-auto">
+      <div className="relative flex flex-col w-full max-w-4xl bg-white dark:bg-neutral-900 shadow-2xl rounded-sm overflow-visible transition-colors duration-500 mt-8 mb-8">
         
-        {/* Left side: Hero Image */}
-        <HeroImage currentMonth={currentMonth} />
+        {/* Spiral Binding */}
+        <div className="absolute -top-4 left-0 right-0 h-8 flex justify-center space-x-2 sm:space-x-4 z-40">
+          {[...Array(20)].map((_, i) => (
+            <div key={i} className="w-2 sm:w-3 flex flex-col items-center">
+              <div className="w-full h-3 bg-neutral-800 rounded-full shadow-sm" />
+              <div className="w-1.5 h-6 bg-neutral-600 rounded-full -mt-2 shadow-md z-10" />
+            </div>
+          ))}
+        </div>
 
-        {/* Right side: Calendar & Interactivity */}
-        <div className="flex flex-col w-full md:w-[60%] bg-white dark:bg-neutral-900 transition-colors duration-500">
+        {/* Top half: Hero Image including wavy shape, title, and navigation */}
+        <HeroImage 
+          currentMonth={currentMonth} 
+          themeClasses={themeClasses} 
+          onNext={handleNext} 
+          onPrev={handlePrev} 
+        />
+
+        {/* Bottom half: Notes (Left) & Calendar Grid (Right) */}
+        <div className="flex flex-col md:flex-row w-full bg-white dark:bg-neutral-900 transition-colors duration-500 rounded-b-sm z-30 relative pt-4 pb-8 px-4 sm:px-8">
           
-          <MonthNavigator 
-            currentMonth={currentMonth} 
-            onNext={handleNext} 
-            onPrev={handlePrev} 
-          />
+          {/* Notes Panel on the left (about 35% width) */}
+          <div className="w-full md:w-[35%] border-r-0 md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 mb-8 md:mb-0">
+            <NotesPanel 
+              selection={selection} 
+              themeClasses={themeClasses} 
+              getNote={getNote}
+              saveNote={saveNote}
+            />
+          </div>
 
-          <div className="relative flex-1 overflow-hidden min-h-[380px]">
+          {/* Calendar Grid on the right (about 65% width) */}
+          <div className="w-full md:w-[65%] pl-0 md:pl-8 relative min-h-[420px]">
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
                 key={currentMonth.toISOString()}
@@ -105,13 +125,6 @@ export function CalendarLayout() {
               </motion.div>
             </AnimatePresence>
           </div>
-
-          <NotesPanel 
-            selection={selection} 
-            themeClasses={themeClasses} 
-            getNote={getNote}
-            saveNote={saveNote}
-          />
         </div>
       </div>
     </div>
