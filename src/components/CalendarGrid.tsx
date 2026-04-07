@@ -38,11 +38,11 @@ export function CalendarGrid({
   for (let i = 0; i < 7; i++) {
     const isWeekend = i === 5 || i === 6;
     days.push(
-      <div key={i} className={`text-center font-bold text-[10px] sm:text-xs py-3 uppercase tracking-[0.2em] font-outfit ${isWeekend ? themeClasses.text : 'text-neutral-500 dark:text-neutral-400'}`}>
+      <div key={i} className={`text-center font-bold text-[8px] sm:text-[10px] py-3 uppercase tracking-wider ${isWeekend ? themeClasses.text : 'text-neutral-700 dark:text-neutral-400'}`}>
         {format(day, dateFormat).substring(0, 3)}
       </div>
     );
-    day = new Date(day.setDate(day.getDate() + 1));
+    day = addDays(day, 1);
   }
 
   // Generate days in a fixed 6-week grid

@@ -31,17 +31,17 @@ export function NotesPanel({ selection, getNote, saveNote }: NotesPanelProps) {
   };
 
   return (
-    <div className="flex flex-col h-full transition-opacity animate-in fade-in duration-300">
-      <h3 className="text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-4 uppercase tracking-wide">
-        Notes
+    <div className="flex flex-col h-full">
+      <h3 className="text-[10px] font-extrabold text-neutral-600 dark:text-neutral-400 mb-6 tracking-wide">
+        MONTHLY NOTES
       </h3>
       <textarea
         value={content}
         onChange={handleChange}
         placeholder=""
-        className="w-full flex-1 min-h-[250px] resize-none bg-transparent text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none leading-[32px] border-none p-0"
+        className="w-full flex-1 min-h-[300px] resize-none bg-transparent text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none leading-[46px] border-none p-0"
         style={{ 
-          backgroundImage: `repeating-linear-gradient(transparent, transparent 31px, #d4d4d4 31px, #d4d4d4 32px)`,
+          backgroundImage: `repeating-linear-gradient(transparent, transparent 45px, #e5e5e5 45px, #e5e5e5 46px)`,
           backgroundAttachment: 'local'
         }}
         spellCheck="false"
