@@ -69,13 +69,13 @@ export function DayCell({
   // Calculate rounded corners for the continuous strip
   if (isWithinSelection || isHoverPreview) {
     bgClass = 'bg-opacity-20';
-    if (day.getDay() === 0) clipClass = 'rounded-l-lg'; // Sunday
-    if (day.getDay() === 6) clipClass = 'rounded-r-lg'; // Saturday
+    if (day.getDay() === 1) clipClass = 'rounded-l-lg'; // Monday
+    if (day.getDay() === 0) clipClass = 'rounded-r-lg'; // Sunday
   }
 
   // When hover preview starts and we hover the actual start date, the start circle should show strip correctly
-  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 6;
-  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 0 && selection.start && isBefore(selection.start, day);
+  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 0;
+  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 1 && selection.start && isBefore(selection.start, day);
 
   return (
     <div 
