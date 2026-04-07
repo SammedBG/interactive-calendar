@@ -100,7 +100,7 @@ export function DayCell({
     }
   };
 
-  const containerClass = `group relative h-16 sm:h-24 flex flex-col items-center justify-start py-1 sm:py-2 border border-transparent transition-all duration-300 ${
+  const containerClass = `group relative h-16 sm:h-20 flex flex-col items-center justify-start py-1 sm:py-1.5 border border-transparent transition-all duration-300 ${
     isDisabled
       ? 'cursor-not-allowed opacity-40'
       : 'cursor-pointer hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30'
