@@ -24,10 +24,10 @@ export function HeroImage({ currentMonth }: HeroImageProps) {
   const imageUrl = MONTH_IMAGES[monthIndex];
 
   return (
-    <div className="relative w-full h-[200px] md:h-full md:w-[40%] flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+    <div className="relative w-full min-h-[200px] md:w-[40%] flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 self-stretch">
       <div 
         className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
-        style={{ backgroundImage: `url(${imageUrl})` }}
+        style={{ backgroundImage: `url('${imageUrl}')` }}
       />
       <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/60 to-transparent flex items-end md:items-start md:justify-end flex-col p-6 z-10 text-white">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight drop-shadow-lg">

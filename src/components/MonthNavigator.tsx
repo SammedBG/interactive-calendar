@@ -1,6 +1,7 @@
 import { useTheme } from 'next-themes';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface MonthNavigatorProps {
   currentMonth: Date;
@@ -11,6 +12,11 @@ interface MonthNavigatorProps {
 
 export function MonthNavigator({ currentMonth, onNext, onPrev, accentColor }: MonthNavigatorProps) {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="flex items-center justify-between p-4 sm:p-6 border-b dark:border-neutral-800">
@@ -38,10 +44,10 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, accentColor }: Mo
       <div>
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors dark:text-neutral-400"
+          className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors dark:text-neutral-400 w-9 h-9 flex items-center justify-center"
           aria-label="Toggle theme"
         >
-          {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {mounted && (theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
         </button>
       </div>
     </div>
