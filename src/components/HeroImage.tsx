@@ -12,24 +12,11 @@ export interface HeroImageProps {
   onPrev: () => void;
 }
 
-const MONTH_IMAGES = [
-  'https://images.unsplash.com/photo-1422207134147-65fb81f59e38?q=80&w=800&auto=format&fit=crop', // Jan (Winter snow)
-  'https://images.unsplash.com/photo-1549488344-c6e7a25a4c51?q=80&w=800&auto=format&fit=crop', // Feb (Pink/Valentines feel)
-  'https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?q=80&w=800&auto=format&fit=crop', // Mar (Spring blossom)
-  'https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?q=80&w=800&auto=format&fit=crop', // Apr (Rain/Dew)
-  'https://images.unsplash.com/photo-1490750967868-88cb44cb2722?q=80&w=800&auto=format&fit=crop', // May (Flowers)
-  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop', // Jun (Beach)
-  'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?q=80&w=800&auto=format&fit=crop', // Jul (Sunflowers/Summer)
-  'https://images.unsplash.com/photo-1433838552652-f9a46b332c40?q=80&w=800&auto=format&fit=crop', // Aug (Warm sunset)
-  'https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=800&auto=format&fit=crop', // Sep (Early autumn)
-  'https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=800&auto=format&fit=crop', // Oct (Fall foliage/Pumpkins)
-  'https://images.unsplash.com/photo-1444044205806-38f32ac628f5?q=80&w=800&auto=format&fit=crop', // Nov (Late autumn/Mist)
-  'https://images.unsplash.com/photo-1544261453-24151fb4ad0c?q=80&w=800&auto=format&fit=crop', // Dec (Winter evening)
-];
+// Static image used for all months to match design strictly
+const CURRENT_IMAGE_URL = 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop'; // A similar beautiful snow mountain aesthetic
 
 export function HeroImage({ currentMonth, themeClasses, onNext, onPrev }: HeroImageProps) {
-  const monthIndex = currentMonth.getMonth();
-  const imageUrl = MONTH_IMAGES[monthIndex];
+  const imageUrl = CURRENT_IMAGE_URL;
 
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);

@@ -56,38 +56,39 @@ export function CalendarGrid({
     if (rangeMatch) {
       const start = rangeMatch[1];
       const end = rangeMatch[2];
-      acc.push(start <= end ? { start, end } : { start: end, end: start });
+      acc.push(start <= end ? { start, end, content: value } : { start: end, end: start, content: value });
       return acc;
     }
 
     const singleMatch = NOTE_KEY_SINGLE.exec(key);
     if (singleMatch) {
       const dayKey = singleMatch[1];
-      acc.push({ start: dayKey, end: dayKey });
+      acc.push({ start: dayKey, end: dayKey, content: value });
     }
 
     return acc;
-  }, [] as Array<{ start: string; end: string }>);
+  }, [] as Array<{ start: string; end: string; content: string }>);
 
   return (
     <div className="flex-1 flex flex-col p-4 sm:p-6 pb-0">
-      <div className="grid grid-cols-7 mb-2">
+      <div className="grid grid-cols-7 mb-2 sm:mb-4">
         {days}
       </div>
       <div className="grid grid-cols-7 gap-y-1 sm:gap-y-2 flex-1">
         {daysInGrid.map(d => {
           const formattedDay = format(d, 'yyyy-MM-dd');
-          const hasNote = noteRanges.some(range => formattedDay >= range.start && formattedDay <= range.end);
+          const matchingNote = noteRanges.find(range => formattedDay >= range.start && formattedDay <= range.end);
           
           return (
             <DayCell
-              key={d.toString()}
+              key={d.toISOString()}
               day={d}
               currentMonth={currentMonth}
               selection={selection}
               hoveredDate={hoveredDate}
               themeClasses={themeClasses}
-              hasNote={hasNote}
+              hasNote={!!matchingNote}
+              notePreview={matchingNote ? matchingNote.content : undefined}
               onSetHoveredDate={onSetHoveredDate}
               onClick={onDateClick}
             />
