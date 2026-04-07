@@ -3,7 +3,6 @@
 import { useCalendar } from '../hooks/useCalendar';
 import { useNotes } from '../hooks/useNotes';
 import { HeroImage } from './HeroImage';
-import { MonthNavigator } from './MonthNavigator';
 import { CalendarGrid } from './CalendarGrid';
 import { NotesPanel } from './NotesPanel';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -89,8 +88,8 @@ export function CalendarLayout() {
         {/* Bottom half: Notes (Left) & Calendar Grid (Right) */}
         <div className="flex flex-col md:flex-row w-full bg-white dark:bg-neutral-900 transition-colors duration-500 rounded-b-sm z-30 relative pt-4 pb-8 px-4 sm:px-8">
           
-          {/* Notes Panel on the left (about 1/3 width) */}
-          <div className="w-full md:w-[35%] border-r-0 md:border-r border-dashed border-neutral-300 dark:border-neutral-700 pr-0 md:pr-8 mb-8 md:mb-0">
+          {/* Notes Panel on the left (about 35% width) */}
+          <div className="w-full md:w-[35%] border-r-0 md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 mb-8 md:mb-0">
             <NotesPanel 
               selection={selection} 
               accentColor={accentColor} 
