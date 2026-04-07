@@ -32,7 +32,7 @@ export function CalendarGrid({
 
   const dateFormat = "E";
   const days = [];
-  let day = startDate;
+  let day = new Date(startDate);
 
   // Add Day Headers (Mon-Sun)
   for (let i = 0; i < 7; i++) {
