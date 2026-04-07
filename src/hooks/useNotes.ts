@@ -15,7 +15,7 @@ export function useNotes() {
         }
         setNotesRecord(loadedNotes);
       }
-    } catch (e) {
+    } catch {
       // localStorage is unavailable or blocked
     }
   }, []);
@@ -39,7 +39,7 @@ export function useNotes() {
           localStorage.setItem(key, content);
         }
       }
-    } catch (e) {
+    } catch {
       // localStorage unavailable
     }
   }, []);
