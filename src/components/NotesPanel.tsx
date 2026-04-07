@@ -31,17 +31,17 @@ export function NotesPanel({ selection, getNote, saveNote }: NotesPanelProps) {
   };
 
   return (
-    <div className="flex flex-col h-full transition-opacity animate-in fade-in duration-500">
-      <h3 className="text-[10px] sm:text-xs font-bold text-neutral-400 dark:text-neutral-500 mb-6 uppercase tracking-[0.2em]">
-        Editorial Notes {selection.start ? (selection.end ? `(${format(selection.start!, 'M/d')} - ${format(selection.end!, 'M/d')})` : `(${format(selection.start!, 'M/d')})`) : ''}
+    <div className="flex flex-col h-full transition-opacity animate-in fade-in duration-300">
+      <h3 className="text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-4 uppercase tracking-wide">
+        Notes
       </h3>
       <textarea
         value={content}
         onChange={handleChange}
-        placeholder="Document your thoughts..."
-        className="w-full flex-1 min-h-[250px] resize-none bg-transparent text-sm sm:text-base text-neutral-700 dark:text-neutral-300 focus:outline-none leading-[36px] border-none p-0 font-outfit"
+        placeholder=""
+        className="w-full flex-1 min-h-[250px] resize-none bg-transparent text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none leading-[32px] border-none p-0"
         style={{ 
-          backgroundImage: `repeating-linear-gradient(transparent, transparent 35px, rgba(163, 163, 163, 0.2) 35px, rgba(163, 163, 163, 0.2) 36px)`,
+          backgroundImage: `repeating-linear-gradient(transparent, transparent 31px, #d4d4d4 31px, #d4d4d4 32px)`,
           backgroundAttachment: 'local'
         }}
         spellCheck="false"
