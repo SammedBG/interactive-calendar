@@ -72,15 +72,15 @@ export function DayCell({
     circleClass = `bg-white dark:bg-neutral-800 border-[2px] border-current shadow-sm ${themeClasses.text}`;
   }
 
-  // Rounded corners strip logic (1 for Monday, 0 for Sunday)
+  // Rounded corners strip logic (0 for Sunday, 6 for Saturday)
   if (isWithinSelection || isHoverPreview) {
     bgClass = themeClasses.bgOpacity;
-    if (day.getDay() === 1) clipClass = 'rounded-l-lg'; // Monday
-    if (day.getDay() === 0) clipClass = 'rounded-r-lg'; // Sunday
+    if (day.getDay() === 0) clipClass = 'rounded-l-lg'; // Sunday
+    if (day.getDay() === 6) clipClass = 'rounded-r-lg'; // Saturday
   }
 
-  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 0; // Don't show right strip if it's Sunday
-  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 1 && selection.start && isBefore(selection.start, day); // Don't show left strip if it's Monday
+  const showRightStrip = (isSelectedStart && (selection.end || (hoveredDate && selection.start && isAfter(hoveredDate, selection.start)))) && day.getDay() !== 6; // Don't show right strip if it's Saturday
+  const showLeftStrip = (isSelectedEnd || (isSelectedStart && !selection.end && hoveredDate && isSameDay(hoveredDate, day))) && day.getDay() !== 0 && selection.start && isBefore(selection.start, day); // Don't show left strip if it's Sunday
 
   const handleMouseEnter = () => {
     if (!isDisabled) {
@@ -128,12 +128,12 @@ export function DayCell({
       )}
       {/* Date Circle */}
       <div className={`relative z-10 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all duration-300 ease-out ${circleClass} ${!isDisabled && !isSelectedStart && !isSelectedEnd ? 'group-hover:scale-110' : ''}`}>
-        <span className={`${textClass} font-outfit tracking-tight text-sm sm:text-base`}>
+        <span className={`${textClass} tracking-tight text-sm sm:text-base`}>
           {day.getDate()}
         </span>
         {/* Note Indicator Dot */}
         {hasNote && (
-          <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-yellow-400 rounded-full border-2 border-white dark:border-neutral-900 shadow-sm" />
+          <div className={`absolute -top-1 -right-1 w-2.5 h-2.5 ${themeClasses.bg} rounded-full border-2 border-white dark:border-neutral-900 shadow-sm`} />
         )}
       </div>
 

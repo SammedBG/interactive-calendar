@@ -1,6 +1,7 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
 import { format } from 'date-fns';
 import { SelectionState } from '../hooks/useCalendar';
+
 interface NotesPanelProps {
   selection: SelectionState;
   getNote: (key: string) => string;
@@ -30,20 +31,33 @@ export function NotesPanel({ selection, getNote, saveNote }: NotesPanelProps) {
     }
   };
 
+  if (!selection.start) {
+    return (
+      <div className="flex flex-col h-full">
+        <h3 className="text-[10px] font-extrabold text-neutral-600 dark:text-neutral-400 mb-4 tracking-wide">
+          NOTES
+        </h3>
+        <div className="notes-paper flex-1 min-h-[220px] rounded-sm border border-neutral-200/70 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/60 px-3 py-2 text-xs text-neutral-400 dark:text-neutral-500">
+          Select a date or range to add notes.
+        </div>
+      </div>
+    );
+  }
+
+  const label = selection.end
+    ? `Notes for ${format(selection.start, 'MMM d')} - ${format(selection.end, 'MMM d')}`
+    : `Notes for ${format(selection.start, 'MMM d')}`;
+
   return (
     <div className="flex flex-col h-full">
-      <h3 className="text-[10px] font-extrabold text-neutral-600 dark:text-neutral-400 mb-6 tracking-wide">
-        MONTHLY NOTES
+      <h3 className="text-[10px] font-extrabold text-neutral-600 dark:text-neutral-400 mb-4 tracking-wide">
+        {label}
       </h3>
       <textarea
         value={content}
         onChange={handleChange}
-        placeholder=""
-        className="w-full flex-1 min-h-[300px] resize-none bg-transparent text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none leading-[46px] border-none p-0"
-        style={{ 
-          backgroundImage: `repeating-linear-gradient(transparent, transparent 45px, #e5e5e5 45px, #e5e5e5 46px)`,
-          backgroundAttachment: 'local'
-        }}
+        placeholder="Type your notes here..."
+        className="notes-paper w-full flex-1 min-h-[260px] resize-none rounded-sm border border-neutral-200/70 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/60 px-3 py-2 text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none leading-[32px]"
         spellCheck="false"
       />
     </div>

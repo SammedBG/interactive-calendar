@@ -20,6 +20,29 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+@layer components {
+  .notes-paper {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 31px,
+      rgba(15, 23, 42, 0.08) 31px,
+      rgba(15, 23, 42, 0.08) 32px
+    );
+    background-attachment: local;
+  }
+
+  .dark .notes-paper {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 31px,
+      rgba(148, 163, 184, 0.25) 31px,
+      rgba(148, 163, 184, 0.25) 32px
+    );
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

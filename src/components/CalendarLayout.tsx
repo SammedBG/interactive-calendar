@@ -3,6 +3,7 @@
 import { useCalendar } from '../hooks/useCalendar';
 import { useNotes } from '../hooks/useNotes';
 import { HeroImage } from './HeroImage';
+import { MonthNavigator } from './MonthNavigator';
 import { CalendarGrid } from './CalendarGrid';
 import { NotesPanel } from './NotesPanel';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,27 +44,21 @@ export function CalendarLayout() {
   const monthIndex = currentMonth.getMonth();
   const themeClasses = MONTH_THEMES[monthIndex];
 
-  // 3D Page flip animation variants
+  // Slide animation variants
   const variants = {
     enter: (direction: number) => ({
-      rotateX: direction > 0 ? -90 : 90,
-      opacity: 0,
-      transformOrigin: 'top',
-      z: 100
+      x: direction > 0 ? 220 : -220,
+      opacity: 0
     }),
     center: {
       zIndex: 1,
-      rotateX: 0,
-      opacity: 1,
-      transformOrigin: 'top',
-      z: 0
+      x: 0,
+      opacity: 1
     },
     exit: (direction: number) => ({
       zIndex: 0,
-      rotateX: direction < 0 ? -90 : 90,
-      opacity: 0,
-      transformOrigin: 'bottom',
-      z: 100
+      x: direction < 0 ? 220 : -220,
+      opacity: 0
     })
   };
 
@@ -85,52 +80,52 @@ export function CalendarLayout() {
         </div>
 
         {/* Top half: Hero Image including angular cut */}
-        <HeroImage 
-          currentMonth={currentMonth} 
-          themeClasses={themeClasses} 
-          onNext={handleNext} 
-          onPrev={handlePrev} 
-        />
+        <HeroImage currentMonth={currentMonth} themeClasses={themeClasses} />
 
         {/* Bottom half: Notes (Left) & Calendar Grid (Right) */}
-        <div className="flex flex-col md:flex-row w-full bg-white dark:bg-neutral-900 z-30 relative pt-2 pb-8 px-4 sm:px-8 shadow-inner min-h-[500px] sm:min-h-[600px]">
-          
-          {/* Notes Panel on the left */}
-          <div className="w-full md:w-[35%] md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 mb-8 md:mb-0">
-            <NotesPanel 
-              selection={selection} 
-              getNote={getNote}
-              saveNote={saveNote}
-            />
-          </div>
+        <div className="flex flex-col w-full bg-white dark:bg-neutral-900 z-30 relative pt-2 pb-8 px-4 sm:px-8 shadow-inner min-h-[500px] sm:min-h-[600px]">
+          <MonthNavigator currentMonth={currentMonth} onNext={handleNext} onPrev={handlePrev} />
 
-          {/* Calendar Grid on the right */}
-          <div className="w-full md:w-[65%] pl-0 md:pl-6 relative">
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
-              <motion.div
-                key={currentMonth.toISOString()}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  rotateX: { type: "spring", stiffness: 100, damping: 20 },
-                  opacity: { duration: 0.3 }
-                }}
-                className="absolute inset-x-0 top-0 flex flex-col perspective-[1000px]"
-              >
-                <CalendarGrid 
-                  currentMonth={currentMonth}
-                  selection={selection}
-                  hoveredDate={hoveredDate}
-                  themeClasses={themeClasses}
-                  notesRecord={notesRecord}
-                  onSetHoveredDate={setHoveredDate}
-                  onDateClick={handleDateClick}
-                />
-              </motion.div>
-            </AnimatePresence>
+          <div className="flex flex-col md:flex-row w-full pt-4">
+            {/* Notes Panel on the left */}
+            <div className="w-full md:w-[35%] md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 order-2 md:order-1">
+              <NotesPanel
+                selection={selection}
+                getNote={getNote}
+                saveNote={saveNote}
+              />
+            </div>
+
+            {/* Calendar Grid on the right */}
+            <div className="w-full md:w-[65%] pl-0 md:pl-6 relative order-1 md:order-2">
+              <div className="relative min-h-[360px] sm:min-h-[420px]">
+                <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                  <motion.div
+                    key={currentMonth.toISOString()}
+                    custom={direction}
+                    variants={variants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: "spring", stiffness: 260, damping: 30 },
+                      opacity: { duration: 0.2 }
+                    }}
+                    className="absolute inset-0 flex flex-col"
+                  >
+                    <CalendarGrid
+                      currentMonth={currentMonth}
+                      selection={selection}
+                      hoveredDate={hoveredDate}
+                      themeClasses={themeClasses}
+                      notesRecord={notesRecord}
+                      onSetHoveredDate={setHoveredDate}
+                      onDateClick={handleDateClick}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
         </div>
       </div>
