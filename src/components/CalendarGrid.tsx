@@ -42,7 +42,7 @@ export function CalendarGrid({
         {format(day, dateFormat).substring(0, 3)}
       </div>
     );
-    day = addDays(day, 1);
+    day = new Date(day.setDate(day.getDate() + 1));
   }
 
   // Generate days in a fixed 6-week grid
