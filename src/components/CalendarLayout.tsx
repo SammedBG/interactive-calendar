@@ -8,7 +8,7 @@ import { MonthNavigator } from './MonthNavigator';
 import { CalendarGrid } from './CalendarGrid';
 import { NotesPanel } from './NotesPanel';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export type ThemeClasses = { bg: string; text: string; ring: string; shadow: string; border: string; bgOpacity: string; };
 
@@ -49,6 +49,22 @@ export function CalendarLayout() {
     setMonthYear(year, month);
   };
 
+  const isScrollingRef = useRef(false);
+
+  const handleWheel = (e: React.WheelEvent) => {
+    if (isScrollingRef.current) return;
+
+    if (e.deltaY > 30) {
+      isScrollingRef.current = true;
+      handleNext();
+      setTimeout(() => { isScrollingRef.current = false; }, 600);
+    } else if (e.deltaY < -30) {
+      isScrollingRef.current = true;
+      handlePrev();
+      setTimeout(() => { isScrollingRef.current = false; }, 600);
+    }
+  };
+
   const monthIndex = currentMonth.getMonth();
   const themeClasses = MONTH_THEMES[monthIndex];
 
@@ -80,7 +96,10 @@ export function CalendarLayout() {
     <div className="flex justify-center items-start min-h-screen bg-neutral-100 dark:bg-neutral-950 p-4 sm:p-12 font-sans overflow-x-hidden overflow-y-auto">
 
       {/* The shadow base to make the calendar pop off the desk */}
-      <div className="calendar-paper relative flex flex-col w-full max-w-[580px] bg-transparent border-transparent rounded-[4px] perspective-[3000px] overflow-visible transition-colors duration-500 mt-8 mb-8 z-10">
+      <div 
+        className="calendar-paper relative flex flex-col w-full max-w-[580px] bg-transparent border-transparent rounded-[4px] perspective-[3000px] overflow-visible transition-colors duration-500 mt-8 mb-8 z-10"
+        onWheel={handleWheel}
+      >
 
         {/* Binder / Top Handle - Static Anchor */}
         <div className="absolute -top-4 inset-x-0 h-8 flex justify-center items-start space-x-3 sm:space-x-4 z-50 pointer-events-none">
