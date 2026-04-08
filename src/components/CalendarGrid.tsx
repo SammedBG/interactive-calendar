@@ -1,4 +1,5 @@
-import { addDays, eachDayOfInterval, format, startOfMonth, startOfWeek } from 'date-fns';
+import { addDays, eachDayOfInterval, format, isSameDay, isSameMonth, isWithinInterval, startOfMonth, startOfWeek } from 'date-fns';
+import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { DayCell } from './DayCell';
 import { SelectionState } from '../hooks/useCalendar';
 import { ThemeClasses } from './CalendarLayout';
@@ -27,14 +28,77 @@ export function CalendarGrid({
   onSetHoveredDate,
   onDateClick,
 }: CalendarGridProps) {
+  const gridRef = useRef<HTMLDivElement | null>(null);
   const monthStart = startOfMonth(currentMonth);
   // Start weeks on Monday to match the reference layout
   const startDate = startOfWeek(monthStart, { weekStartsOn: 1 });
   const endDate = addDays(startDate, 41);
+  const [focusedDate, setFocusedDate] = useState<Date>(startDate);
 
   const dateFormat = "E";
   const days = [];
   let day = new Date(startDate);
+
+  const isDateInGrid = (date: Date) => isWithinInterval(date, { start: startDate, end: endDate });
+
+  useEffect(() => {
+    const today = new Date();
+    const nextFocus = selection.start && isDateInGrid(selection.start)
+      ? selection.start
+      : isDateInGrid(today)
+        ? today
+        : startDate;
+    setFocusedDate(nextFocus);
+  }, [currentMonth, selection.start, startDate, endDate]);
+
+  const focusDate = (date: Date) => {
+    const key = format(date, 'yyyy-MM-dd');
+    const element = gridRef.current?.querySelector(`[data-date="${key}"]`) as HTMLElement | null;
+    if (element) {
+      element.focus();
+    }
+  };
+
+  const handleDayKeyDown = (dayValue: Date) => (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      const next = addDays(dayValue, 1);
+      if (isDateInGrid(next)) {
+        setFocusedDate(next);
+        requestAnimationFrame(() => focusDate(next));
+      }
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      const next = addDays(dayValue, -1);
+      if (isDateInGrid(next)) {
+        setFocusedDate(next);
+        requestAnimationFrame(() => focusDate(next));
+      }
+      return;
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      const next = addDays(dayValue, -7);
+      if (isDateInGrid(next)) {
+        setFocusedDate(next);
+        requestAnimationFrame(() => focusDate(next));
+      }
+      return;
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      const next = addDays(dayValue, 7);
+      if (isDateInGrid(next)) {
+        setFocusedDate(next);
+        requestAnimationFrame(() => focusDate(next));
+      }
+    }
+  };
 
   // Add Day Headers (Mon-Sun)
   for (let i = 0; i < 7; i++) {
@@ -76,11 +140,30 @@ export function CalendarGrid({
       <div className="grid grid-cols-7 mb-2 sm:mb-4">
         {days}
       </div>
-      <div className="grid grid-cols-7 gap-y-1 sm:gap-y-2 flex-1">
+      <div
+        ref={gridRef}
+        role="grid"
+        aria-label="Calendar days"
+        className="grid grid-cols-7 gap-y-1 sm:gap-y-2 flex-1"
+      >
         {daysInGrid.map(d => {
           const formattedDay = format(d, 'yyyy-MM-dd');
           const matchingNote = noteRanges.find(range => formattedDay >= range.start && formattedDay <= range.end);
           const holidayName = holidaysMap[formattedDay];
+          const isCurrentMonth = isSameMonth(d, monthStart);
+          const isFocused = isSameDay(d, focusedDate);
+          const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+          const labelParts = [format(d, 'EEEE, MMMM d, yyyy')];
+
+          if (holidayName) labelParts.push(holidayName);
+          if (matchingNote) labelParts.push('Has note');
+          if (isWeekend) labelParts.push('Weekend');
+          if (!isCurrentMonth) labelParts.push('Not in current month');
+          if (selection.start && isSameDay(d, selection.start)) labelParts.push('Start date');
+          if (selection.end && isSameDay(d, selection.end)) labelParts.push('End date');
+          if (selection.start && selection.end && isWithinInterval(d, { start: selection.start, end: selection.end })) {
+            labelParts.push('In range');
+          }
           
           return (
             <DayCell
@@ -93,6 +176,11 @@ export function CalendarGrid({
               hasNote={!!matchingNote}
               notePreview={matchingNote ? matchingNote.content : undefined}
               holidayName={holidayName}
+              tabIndex={isFocused ? 0 : -1}
+              dataDate={formattedDay}
+              ariaLabel={labelParts.join(', ')}
+              onFocus={() => setFocusedDate(d)}
+              onKeyDown={handleDayKeyDown(d)}
               onSetHoveredDate={onSetHoveredDate}
               onClick={onDateClick}
             />

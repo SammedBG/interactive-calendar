@@ -13,6 +13,9 @@ export function useCalendar() {
 
   const nextMonth = useCallback(() => setCurrentMonth(prev => addMonths(prev, 1)), []);
   const prevMonth = useCallback(() => setCurrentMonth(prev => subMonths(prev, 1)), []);
+  const setMonthYear = useCallback((year: number, month: number) => {
+    setCurrentMonth(new Date(year, month, 1));
+  }, []);
 
   const handleDateClick = useCallback((date: Date) => {
     setSelection(prev => {
@@ -37,6 +40,7 @@ export function useCalendar() {
     currentMonth,
     nextMonth,
     prevMonth,
+    setMonthYear,
     selection,
     handleDateClick,
     hoveredDate,

@@ -1,4 +1,5 @@
 import { isSameMonth, isSameDay, isWithinInterval, isAfter, isBefore } from 'date-fns';
+import { type KeyboardEvent } from 'react';
 import { SelectionState } from '../hooks/useCalendar';
 import { ThemeClasses } from './CalendarLayout';
 
@@ -11,6 +12,11 @@ export interface DayCellProps {
   hasNote: boolean;
   notePreview?: string;
   holidayName?: string;
+  tabIndex?: number;
+  dataDate?: string;
+  ariaLabel?: string;
+  onFocus?: () => void;
+  onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
   onSetHoveredDate: (date: Date | null) => void;
   onClick: (date: Date) => void;
 }
@@ -24,6 +30,11 @@ export function DayCell({
   hasNote,
   notePreview,
   holidayName,
+  tabIndex,
+  dataDate,
+  ariaLabel,
+  onFocus,
+  onKeyDown,
   onSetHoveredDate,
   onClick,
 }: DayCellProps) {
@@ -90,7 +101,19 @@ export function DayCell({
     }
   };
 
-  const containerClass = `group relative w-full min-h-[44px] sm:min-h-[52px] flex flex-col items-center justify-start py-1 border border-transparent transition-all duration-300 ${
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if ((event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') && !isDisabled) {
+      event.preventDefault();
+      onClick(day);
+      return;
+    }
+
+    if (onKeyDown) {
+      onKeyDown(event);
+    }
+  };
+
+  const containerClass = `group relative w-full min-h-[44px] sm:min-h-[52px] flex flex-col items-center justify-start py-1 border border-transparent transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-900 ${themeClasses.ring} ${
     isDisabled
       ? 'cursor-not-allowed opacity-40'
       : 'cursor-pointer hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30'
@@ -102,7 +125,13 @@ export function DayCell({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      onFocus={onFocus}
+      tabIndex={tabIndex}
+      data-date={dataDate}
       aria-disabled={isDisabled}
+      aria-label={ariaLabel}
+      role="gridcell"
     >
       {/* Background strip for range selection */}
       {(isWithinSelection || isHoverPreview) && (
