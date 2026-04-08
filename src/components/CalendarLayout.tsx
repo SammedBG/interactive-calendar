@@ -93,16 +93,16 @@ export function CalendarLayout() {
   };
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-neutral-100 dark:bg-neutral-950 p-4 sm:p-12 font-sans overflow-x-hidden overflow-y-auto">
+    <div className="flex justify-center items-start min-h-screen bg-neutral-100 dark:bg-neutral-950 p-2 sm:p-8 lg:p-12 font-sans overflow-x-hidden overflow-y-auto transition-colors duration-500">
 
       {/* The shadow base to make the calendar pop off the desk */}
       <div 
-        className="calendar-paper relative flex flex-col w-full max-w-[580px] bg-transparent border-transparent rounded-[4px] perspective-[3000px] overflow-visible transition-colors duration-500 mt-8 mb-8 z-10"
+        className="calendar-paper relative flex flex-col w-full max-w-[580px] bg-transparent border-transparent rounded-[4px] perspective-[3000px] overflow-visible transition-colors duration-500 mt-6 sm:mt-8 mb-6 sm:mb-8 z-10"
         onWheel={handleWheel}
       >
 
         {/* Binder / Top Handle - Static Anchor */}
-        <div className="absolute -top-4 inset-x-0 h-8 flex justify-center items-start space-x-3 sm:space-x-4 z-50 pointer-events-none">
+        <div className="absolute -top-4 inset-x-0 h-8 flex justify-center items-start space-x-1.5 sm:space-x-4 z-50 pointer-events-none">
           {[...Array(24)].map((_, i) => (
             <div key={i} className="relative w-2 sm:w-2.5 flex flex-col items-center">
               <div className="w-full h-2.5 bg-neutral-800 dark:bg-black rounded-full shadow-inner" />
@@ -136,7 +136,7 @@ export function CalendarLayout() {
               <HeroImage currentMonth={currentMonth} themeClasses={themeClasses} />
 
               {/* Bottom half: Notes & Calendar Grid */}
-              <div className="flex flex-col w-full z-30 relative pt-3 pb-10 px-5 sm:px-10 min-h-[500px] sm:min-h-[600px] bg-white dark:bg-neutral-900">
+              <div className="flex flex-col w-full z-30 relative pt-2 sm:pt-3 pb-6 sm:pb-10 px-3 sm:px-8 lg:px-10 min-h-[460px] sm:min-h-[600px] bg-white dark:bg-neutral-900 transition-colors duration-500">
                 <MonthNavigator
                   currentMonth={currentMonth}
                   onNext={handleNext}
@@ -144,9 +144,9 @@ export function CalendarLayout() {
                   onJumpToMonth={handleJumpToMonth}
                 />
 
-                <div className="flex flex-col md:flex-row w-full pt-4">
+                <div className="flex flex-col lg:flex-row w-full pt-3 sm:pt-4">
                   {/* Notes Panel on the left */}
-                  <div className="w-full md:w-[35%] md:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 md:pr-6 order-2 md:order-1 mt-6 md:mt-0">
+                  <div className="w-full lg:w-[35%] lg:border-r border-solid border-neutral-200 dark:border-neutral-800 pr-0 lg:pr-6 order-2 lg:order-1 mt-5 lg:mt-0">
                     <NotesPanel
                       selection={selection}
                       themeClasses={themeClasses}
@@ -156,8 +156,8 @@ export function CalendarLayout() {
                   </div>
 
                   {/* Calendar Grid on the right */}
-                  <div className="w-full md:w-[65%] pl-0 md:pl-6 relative order-1 md:order-2">
-                    <div className="relative min-h-[360px] sm:min-h-[420px]">
+                  <div className="w-full lg:w-[65%] pl-0 lg:pl-6 relative order-1 lg:order-2">
+                    <div className="relative min-h-[330px] sm:min-h-[420px]">
                       <CalendarGrid
                         currentMonth={currentMonth}
                         selection={selection}

@@ -19,6 +19,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+      </head>
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-neutral-50 dark:bg-[#0a0a0a] transition-colors duration-700`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}

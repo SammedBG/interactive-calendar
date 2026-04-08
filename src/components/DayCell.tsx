@@ -113,7 +113,7 @@ export function DayCell({
     }
   };
 
-  const containerClass = `group relative w-full min-h-[44px] sm:min-h-[52px] flex flex-col items-center justify-start py-1 border border-transparent transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-900 ${themeClasses.ring} ${
+  const containerClass = `group relative w-full min-h-[40px] sm:min-h-[52px] flex flex-col items-center justify-start py-0.5 sm:py-1 border border-transparent transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-900 ${themeClasses.ring} ${
     isDisabled
       ? 'cursor-not-allowed opacity-40'
       : 'cursor-pointer hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30'
@@ -147,7 +147,7 @@ export function DayCell({
       )}
       {/* Date Circle */}
       <div className={`relative z-10 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-all duration-300 ease-out ${circleClass} ${!isDisabled && !isSelectedStart && !isSelectedEnd ? 'group-hover:scale-105' : ''}`}>
-        <span className={`${textClass} tracking-tight text-[11px] sm:text-[12px]`}>
+        <span className={`${textClass} tracking-tight text-[10px] sm:text-[12px]`}>
           {day.getDate()}
         </span>
         {/* Note Indicator Dot */}
@@ -173,7 +173,7 @@ export function DayCell({
 
       {/* Holiday Text */}
       {holidayName && (
-        <span className="relative z-10 mt-1 sm:mt-2 text-[10px] sm:text-xs text-neutral-500 font-medium truncate max-w-[90%] pointer-events-none text-center">
+        <span className="relative z-10 mt-1 sm:mt-2 text-[10px] sm:text-xs text-neutral-500 font-medium truncate max-w-[90%] pointer-events-none text-center hidden sm:inline-block">
           {holidayName}
         </span>
       )}
