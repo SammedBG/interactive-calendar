@@ -125,7 +125,7 @@ export function CalendarLayout() {
                       rotateX: { type: "spring", stiffness: 140, damping: 20 },
                       opacity: { duration: 0.25 }
                     }}
-                    className="absolute inset-0 flex flex-col origin-top transform-gpu"
+                    className="absolute inset-0 flex flex-col origin-top transform-gpu preserve-3d backface-hidden"
                   >
                     <CalendarGrid
                       currentMonth={currentMonth}
