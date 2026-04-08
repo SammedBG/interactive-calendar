@@ -48,6 +48,16 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, onJumpToMonth }: 
           <ChevronRight className="w-5 h-5" />
         </button>
         <button
+          onClick={() => {
+            const today = new Date();
+            onJumpToMonth(today.getFullYear(), today.getMonth());
+          }}
+          className="h-11 px-4 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-[11px] font-semibold uppercase tracking-[0.3em] text-neutral-600 dark:text-neutral-300 hidden sm:block"
+          type="button"
+        >
+          Today
+        </button>
+        <button
           onClick={() => setIsJumpOpen(prev => !prev)}
           className="h-11 px-4 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-[11px] font-semibold uppercase tracking-[0.3em] text-neutral-600 dark:text-neutral-300"
           aria-expanded={isJumpOpen}
