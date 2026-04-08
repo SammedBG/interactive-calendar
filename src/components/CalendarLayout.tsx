@@ -106,10 +106,10 @@ export function CalendarLayout() {
               animate="center"
               exit="exit"
               transition={{
-                rotateX: { type: "spring", stiffness: 60, damping: 15, mass: 1 },
-                z: { type: "spring", stiffness: 60, damping: 15 },
-                opacity: { duration: 0.35 },
-                filter: { duration: 0.4 }
+                rotateX: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+                z: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+                opacity: { duration: 0.4 },
+                filter: { duration: 0.65, ease: [0.22, 1, 0.36, 1] }
               }}
               className="col-start-1 row-start-1 w-full bg-white dark:bg-neutral-900 rounded-[4px] origin-top transform-gpu preserve-3d backface-hidden flex flex-col shadow-sm border border-neutral-200/70 dark:border-neutral-800"
             >
