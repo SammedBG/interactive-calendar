@@ -48,14 +48,14 @@ ext-themes utilizing a strict class strategy to prevent flashes of unstyled cont
 ## ⚙️ Setup & Running Locally
 
 1. **Install dependencies:**
-   \\\ash
+   ```
    npm install
-   \\\
+   ```
 
 2. **Start the development server:**
-   \\\ash
+   ```
    npm run dev
-   \\\
+   ```
 
 3. **View the Project:**
    Open [http://localhost:3000](http://localhost:3000) (or the port specified in terminal) in your browser.
