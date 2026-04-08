@@ -42,28 +42,28 @@ export function HeroImage({ currentMonth, themeClasses }: HeroImageProps) {
       <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-black/50 to-transparent z-10" />
 
       {/* Flat angular chevron overlay at the bottom */}
-      <div className="absolute bottom-0 inset-x-0 z-10 translate-y-[1px] h-[25%]">
+      <div className="absolute bottom-0 inset-x-0 z-10 translate-y-[1px] h-[30%] sm:h-[35%]">
         {/* Exact Geometric V-shape matches the original physical layout */}
         <svg viewBox="0 0 1440 320" className="w-full h-full text-white dark:text-neutral-900 transition-colors duration-500" preserveAspectRatio="none">
           {/* Accent colored angled V-band */}
-          <path 
+          <path
             fill="currentColor"
             className={`${themeClasses.text} transition-colors duration-500 ease-in-out`}
-            d="M0,96L480,256L1440,64L1440,320L480,320L0,320Z"
+            d="M0,64L480,224L1440,32L1440,320L480,320L0,320Z"
           ></path>
           {/* Main White/Dark Background cut-out representing the physical paper page meeting the blue chevron */}
-          <path 
-            fill="currentColor" 
+          <path
+            fill="currentColor"
             d="M0,192L480,320L1440,160L1440,320L0,320Z"
           ></path>
         </svg>
 
         {/* Text inside the right side of the blue chevron */}
-        <div className="absolute bottom-6 right-6 sm:right-10 z-20 text-white text-right">
-          <div className="text-[10px] sm:text-xs font-semibold tracking-[0.35em]">
+        <div className="absolute bottom-10 sm:bottom-16 lg:bottom-20 right-6 sm:right-12 z-20 text-white text-right drop-shadow-md">
+          <div className="text-[10px] sm:text-xs lg:text-sm font-semibold tracking-[0.35em]">
             {yearLabel}
           </div>
-          <div className="text-xl sm:text-2xl lg:text-3xl font-bold uppercase tracking-[0.3em]">
+          <div className="text-xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-[0.3em]">
             {monthLabel}
           </div>
         </div>
