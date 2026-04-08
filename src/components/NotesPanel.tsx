@@ -39,7 +39,7 @@ export function NotesPanel({ selection, themeClasses, getNote, saveNote }: Notes
         <h3 className="text-[10px] font-extrabold text-neutral-600 dark:text-neutral-400 mb-4 tracking-wide">
           NOTES
         </h3>
-        <div className="notes-paper flex-1 min-h-[200px] text-[11px] text-neutral-400 dark:text-neutral-500">
+        <div className="notes-paper flex-1 min-h-[200px] text-[13px] leading-[24px] pt-[2px] px-1 text-neutral-400 dark:text-neutral-500">
           Select a date or range to add notes.
         </div>
       </div>
@@ -59,7 +59,7 @@ export function NotesPanel({ selection, themeClasses, getNote, saveNote }: Notes
         value={content}
         onChange={handleChange}
         placeholder="Type your notes here..."
-        className={`notes-paper w-full flex-1 min-h-[220px] resize-none bg-transparent border-0 px-0 py-0 text-[11px] text-neutral-600 dark:text-neutral-300 focus:outline-none focus-visible:ring-2 ${themeClasses.ring} leading-[24px]`}
+        className={`notes-paper w-full flex-1 min-h-[220px] resize-none bg-transparent border-0 px-1 py-0 text-[13px] text-neutral-600 dark:text-neutral-300 focus:outline-none focus-visible:ring-2 ${themeClasses.ring} leading-[24px] pt-[2px]`}
         spellCheck="false"
       />
     </div>
