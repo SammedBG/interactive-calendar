@@ -19,6 +19,8 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, onJumpToMonth }: 
   const [jumpYear, setJumpYear] = useState(currentMonth.getFullYear());
   const jumpPanelId = useId();
   const transitionTimeoutRef = useRef<number | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const jumpButtonRef = useRef<HTMLButtonElement | null>(null);
   const isDarkTheme = mounted && resolvedTheme === 'dark';
 
   useEffect(() => {
@@ -37,6 +39,36 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, onJumpToMonth }: 
     };
   }, []);
 
+  useEffect(() => {
+    if (!isJumpOpen) {
+      return;
+    }
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const targetNode = event.target as Node | null;
+      if (!targetNode || !rootRef.current?.contains(targetNode)) {
+        setIsJumpOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsJumpOpen(false);
+        jumpButtonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('touchstart', handlePointerDown);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('touchstart', handlePointerDown);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isJumpOpen]);
+
   const handleThemeToggle = () => {
     if (!mounted) return;
 
@@ -53,14 +85,14 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, onJumpToMonth }: 
   };
 
   return (
-    <div className="relative flex flex-col gap-3 pb-4 border-b border-neutral-200/70 dark:border-neutral-800/70">
+    <div ref={rootRef} className="relative flex flex-col gap-3 pb-4 border-b border-neutral-200/70 dark:border-neutral-800/70">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-neutral-600 dark:text-neutral-300 truncate">
+        <h2 className="text-[10px] min-[360px]:text-[11px] sm:text-xs font-semibold uppercase tracking-[0.16em] min-[390px]:tracking-[0.2em] sm:tracking-[0.3em] text-neutral-600 dark:text-neutral-300 truncate">
           {format(currentMonth, 'MMMM yyyy')}
         </h2>
         <button
           onClick={onPrev}
-          className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-800 dark:text-neutral-100"
+          className="w-9 h-9 min-[390px]:w-10 min-[390px]:h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-800 dark:text-neutral-100"
           aria-label="Previous month"
           type="button"
         >
@@ -68,7 +100,7 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, onJumpToMonth }: 
         </button>
         <button
           onClick={onNext}
-          className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-800 dark:text-neutral-100"
+          className="w-9 h-9 min-[390px]:w-10 min-[390px]:h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-neutral-800 dark:text-neutral-100"
           aria-label="Next month"
           type="button"
         >
@@ -76,22 +108,24 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, onJumpToMonth }: 
         </button>
       </div>
 
-      <div className="flex items-center justify-end gap-2 flex-wrap">
+      <div className="flex items-center justify-end gap-1.5 min-[390px]:gap-2 flex-wrap">
         <button
           onClick={() => {
             const today = new Date();
             onJumpToMonth(today.getFullYear(), today.getMonth());
           }}
-          className="h-10 sm:h-11 px-3 sm:px-4 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-neutral-600 dark:text-neutral-300"
+          className="h-9 min-[390px]:h-10 sm:h-11 px-2.5 min-[390px]:px-3 sm:px-4 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-[9px] min-[390px]:text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] min-[390px]:tracking-[0.2em] sm:tracking-[0.3em] text-neutral-600 dark:text-neutral-300"
           type="button"
         >
           Today
         </button>
         <button
+          ref={jumpButtonRef}
           onClick={() => setIsJumpOpen(prev => !prev)}
-          className="h-10 sm:h-11 px-3 sm:px-4 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-neutral-600 dark:text-neutral-300"
+          className="h-9 min-[390px]:h-10 sm:h-11 px-2.5 min-[390px]:px-3 sm:px-4 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-[9px] min-[390px]:text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] min-[390px]:tracking-[0.2em] sm:tracking-[0.3em] text-neutral-600 dark:text-neutral-300"
           aria-expanded={isJumpOpen}
           aria-controls={jumpPanelId}
+          aria-haspopup="dialog"
           type="button"
         >
           Jump
@@ -99,7 +133,7 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, onJumpToMonth }: 
         <div className="w-px h-6 bg-neutral-200 dark:bg-neutral-700" />
         <button
           onClick={handleThemeToggle}
-          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors dark:text-neutral-300 text-neutral-500 flex items-center justify-center"
+          className="w-9 h-9 min-[390px]:w-10 min-[390px]:h-10 sm:w-11 sm:h-11 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors dark:text-neutral-300 text-neutral-500 flex items-center justify-center"
           aria-label="Toggle theme"
           type="button"
         >
@@ -116,7 +150,7 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, onJumpToMonth }: 
       {isJumpOpen && (
         <div
           id={jumpPanelId}
-          className="absolute right-0 top-full mt-3 w-[260px] rounded-sm border border-neutral-200/70 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-[0_12px_30px_rgba(0,0,0,0.18)] p-3 z-40"
+          className="absolute right-0 top-full mt-3 w-[min(94vw,280px)] min-[390px]:w-[min(92vw,280px)] sm:w-[260px] rounded-sm border border-neutral-200/70 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-[0_12px_30px_rgba(0,0,0,0.18)] p-3 z-40"
           role="dialog"
           aria-label="Jump to month"
         >
@@ -151,7 +185,7 @@ export function MonthNavigator({ currentMonth, onNext, onPrev, onJumpToMonth }: 
                     onJumpToMonth(jumpYear, index);
                     setIsJumpOpen(false);
                   }}
-                  className={`rounded-sm border px-2 py-2 text-[11px] font-semibold uppercase tracking-[0.25em] transition-colors ${
+                  className={`rounded-sm border px-2 py-2 text-[10px] min-[390px]:text-[11px] font-semibold uppercase tracking-[0.2em] min-[390px]:tracking-[0.25em] transition-colors ${
                     isActive
                       ? 'border-neutral-900 bg-neutral-900 text-white dark:border-white dark:bg-white dark:text-neutral-900'
                       : 'border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'

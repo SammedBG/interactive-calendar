@@ -104,7 +104,7 @@ export function CalendarGrid({
   for (let i = 0; i < 7; i++) {
     const isWeekend = day.getDay() === 0 || day.getDay() === 6;
     days.push(
-      <div key={i} className={`text-center font-extrabold text-[8px] sm:text-[10px] py-2 uppercase tracking-[0.2em] sm:tracking-[0.3em] ${isWeekend ? themeClasses.text : 'text-neutral-700 dark:text-neutral-400'}`}>
+      <div key={i} className={`text-center font-extrabold text-[7px] min-[360px]:text-[8px] min-[390px]:text-[9px] sm:text-[10px] py-2 uppercase tracking-[0.12em] min-[390px]:tracking-[0.2em] sm:tracking-[0.3em] ${isWeekend ? themeClasses.text : 'text-neutral-700 dark:text-neutral-400'}`}>
         {format(day, dateFormat).substring(0, 3)}
       </div>
     );
@@ -136,7 +136,7 @@ export function CalendarGrid({
   }, [] as Array<{ start: string; end: string; content: string }>);
 
   return (
-    <div className="flex-1 flex flex-col p-2.5 sm:p-5 lg:p-6 pb-0">
+    <div className="flex-1 flex flex-col p-2 min-[360px]:p-2.5 min-[390px]:p-3 sm:p-5 lg:p-6 pb-0">
       <div className="grid grid-cols-7 mb-2 sm:mb-4">
         {days}
       </div>
@@ -144,7 +144,7 @@ export function CalendarGrid({
         ref={gridRef}
         role="grid"
         aria-label="Calendar days"
-        className="grid grid-cols-7 gap-y-0.5 sm:gap-y-2 flex-1"
+        className="grid grid-cols-7 gap-y-0.5 min-[390px]:gap-y-1 sm:gap-y-2 flex-1"
       >
         {daysInGrid.map(d => {
           const formattedDay = format(d, 'yyyy-MM-dd');

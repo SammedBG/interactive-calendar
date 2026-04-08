@@ -63,6 +63,39 @@ body {
     text-wrap: balance;
   }
 
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(148, 163, 184, 0.24);
+  }
+
+  .dark .skeleton-shimmer {
+    background-color: rgba(100, 116, 139, 0.25);
+  }
+
+  .skeleton-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 100%
+    );
+    animation: skeleton-shimmer 1.3s linear infinite;
+  }
+
+  .dark .skeleton-shimmer::after {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(226, 232, 240, 0.28) 50%,
+      transparent 100%
+    );
+  }
+
   .theme-transitioning,
   .theme-transitioning *,
   .theme-transitioning *::before,
@@ -82,5 +115,11 @@ body {
 
   .backface-hidden {
     backface-visibility: hidden;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }

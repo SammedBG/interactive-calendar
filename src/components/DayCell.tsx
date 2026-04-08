@@ -113,7 +113,7 @@ export function DayCell({
     }
   };
 
-  const containerClass = `group relative w-full min-h-[40px] sm:min-h-[52px] flex flex-col items-center justify-start py-0.5 sm:py-1 border border-transparent transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-900 ${themeClasses.ring} ${
+  const containerClass = `group relative w-full min-h-[38px] min-[390px]:min-h-[40px] sm:min-h-[52px] flex flex-col items-center justify-start py-0.5 sm:py-1 border border-transparent transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-900 ${themeClasses.ring} ${
     isDisabled
       ? 'cursor-not-allowed opacity-40'
       : 'cursor-pointer hover:bg-neutral-50/50 dark:hover:bg-neutral-800/30'
@@ -146,19 +146,19 @@ export function DayCell({
         <div className={`absolute top-0 left-0 bottom-0 right-1/2 ${themeClasses.bgOpacity} z-0 pointer-events-none`} />
       )}
       {/* Date Circle */}
-      <div className={`relative z-10 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-all duration-300 ease-out ${circleClass} ${!isDisabled && !isSelectedStart && !isSelectedEnd ? 'group-hover:scale-105' : ''}`}>
-        <span className={`${textClass} tracking-tight text-[10px] sm:text-[12px]`}>
+      <div className={`relative z-10 w-[26px] h-[26px] min-[390px]:w-7 min-[390px]:h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-all duration-300 ease-out ${circleClass} ${!isDisabled && !isSelectedStart && !isSelectedEnd ? 'group-hover:scale-105' : ''}`}>
+        <span className={`${textClass} tracking-tight text-[9px] min-[390px]:text-[10px] sm:text-[12px]`}>
           {day.getDate()}
         </span>
         {/* Note Indicator Dot */}
         {hasNote && (
-          <div className={`absolute -top-1 -right-1 w-2 h-2 ${themeClasses.bg} rounded-full border-2 border-white dark:border-neutral-900 shadow-sm`} />
+          <div className={`absolute -top-1 -right-1 w-1.5 h-1.5 min-[390px]:w-2 min-[390px]:h-2 ${themeClasses.bg} rounded-full border border-white dark:border-neutral-900 shadow-sm`} />
         )}
       </div>
 
       {/* Tooltip for holiday or note hover */}
       {showTooltip && (
-        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100">
+        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 delay-100">
           <div className="bg-neutral-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-neutral-900 text-[11px] px-3 py-2 rounded-lg shadow-xl max-w-[170px] sm:max-w-[220px]">
             {holidayName && (
               <div className="font-semibold uppercase tracking-wide truncate">{holidayName}</div>

@@ -33,8 +33,10 @@ export function HeroImage({ currentMonth, themeClasses }: HeroImageProps) {
   const yearLabel = format(currentMonth, 'yyyy');
   const imageUrl = MONTH_IMAGES[monthIndex];
   const [activeImage, setActiveImage] = useState(imageUrl);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
+    setIsImageLoaded(false);
     setActiveImage(imageUrl);
   }, [imageUrl]);
 
@@ -57,14 +59,26 @@ export function HeroImage({ currentMonth, themeClasses }: HeroImageProps) {
         unoptimized
         loading="eager"
         fetchPriority="high"
-        className="object-cover transition-all duration-1000 ease-in-out"
+        className={`object-cover transition-all duration-700 ease-out ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}
         priority
+        onLoadingComplete={() => setIsImageLoaded(true)}
         onError={() => {
           if (activeImage !== FALLBACK_IMAGE) {
+            setIsImageLoaded(false);
             setActiveImage(FALLBACK_IMAGE);
           }
         }}
       />
+
+      {!isImageLoaded && (
+        <div className="absolute inset-0 z-20 bg-neutral-200 dark:bg-neutral-700/70">
+          <div className="skeleton-shimmer absolute inset-0" />
+          <div className="absolute right-4 bottom-5 sm:right-12 sm:bottom-12 flex flex-col items-end gap-2">
+            <div className="skeleton-shimmer h-3 w-20 min-[390px]:w-24 rounded" />
+            <div className="skeleton-shimmer h-5 min-[390px]:h-6 w-28 min-[390px]:w-36 rounded" />
+          </div>
+        </div>
+      )}
       
       <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-black/50 to-transparent z-10" />
 
@@ -86,11 +100,11 @@ export function HeroImage({ currentMonth, themeClasses }: HeroImageProps) {
         </svg>
 
         {/* Text inside the right side of the blue chevron */}
-        <div className="absolute bottom-5 sm:bottom-16 lg:bottom-20 right-4 sm:right-12 z-20 text-white text-right drop-shadow-md">
-          <div className="text-[9px] sm:text-xs lg:text-sm font-semibold tracking-[0.2em] sm:tracking-[0.35em]">
+        <div className="absolute bottom-4 min-[360px]:bottom-5 sm:bottom-16 lg:bottom-20 right-3 min-[360px]:right-4 sm:right-12 z-20 text-white text-right drop-shadow-md">
+          <div className="text-[8px] min-[360px]:text-[9px] sm:text-xs lg:text-sm font-semibold tracking-[0.18em] min-[390px]:tracking-[0.2em] sm:tracking-[0.35em]">
             {yearLabel}
           </div>
-          <div className="text-base sm:text-3xl lg:text-4xl font-bold uppercase tracking-[0.16em] sm:tracking-[0.3em]">
+          <div className="text-[15px] min-[360px]:text-base min-[390px]:text-lg sm:text-3xl lg:text-4xl font-bold uppercase tracking-[0.14em] min-[390px]:tracking-[0.16em] sm:tracking-[0.3em]">
             {monthLabel}
           </div>
         </div>
