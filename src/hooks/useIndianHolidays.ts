@@ -1,39 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
+import Holidays from 'date-holidays';
 
 export function useIndianHolidays(currentMonth: Date) {
-  const [holidaysMap, setHolidaysMap] = useState<Record<string, string>>({});
   const year = currentMonth.getFullYear();
 
-  useEffect(() => {
+  const holidaysMap = useMemo(() => {
+    const hd = new Holidays('IN');
+    const map: Record<string, string> = {};
     const years = [year - 1, year, year + 1];
-    let isActive = true;
-    const controller = new AbortController();
 
-    const fetchYear = async (targetYear: number): Promise<Record<string, string>> => {
-      const response = await fetch(`/api/holidays?year=${targetYear}`, {
-        signal: controller.signal,
-      });
-      if (!response.ok) {
-        return {};
-      }
-      const data = (await response.json()) as Record<string, string>;
-      return data;
-    };
+    years.forEach((y) => {
+      const holidays = (hd.getHolidays(y) as { date: string; name: string; type?: string }[]).filter(
+        (holiday) => holiday.type === 'public'
+      );
 
-    Promise.all(years.map(fetchYear))
-      .then((maps) => {
-        if (!isActive) {
-          return;
+      holidays.forEach((holiday) => {
+        const dateKey = holiday.date.split(' ')[0];
+        if (dateKey) {
+          map[dateKey] = holiday.name;
         }
-        const combined = Object.assign({}, ...maps);
-        setHolidaysMap(combined);
-      })
-      .catch(() => {});
+      });
+    });
 
-    return () => {
-      isActive = false;
-      controller.abort();
-    };
+    return map;
   }, [year]);
 
   return holidaysMap;

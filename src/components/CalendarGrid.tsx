@@ -39,17 +39,17 @@ export function CalendarGrid({
   const days = [];
   let day = new Date(startDate);
 
-  const isDateInGrid = (date: Date) => isWithinInterval(date, { start: startDate, end: endDate });
+  const isDateInGrid = (date: Date, start: Date, end: Date) => isWithinInterval(date, { start, end });
 
   useEffect(() => {
     const today = new Date();
-    const nextFocus = selection.start && isDateInGrid(selection.start)
+    const nextFocus = selection.start && isDateInGrid(selection.start, startDate, endDate)
       ? selection.start
-      : isDateInGrid(today)
+      : isDateInGrid(today, startDate, endDate)
         ? today
         : startDate;
     setFocusedDate(nextFocus);
-  }, [currentMonth, selection.start, startDate, endDate]);
+  }, [selection.start, startDate, endDate]);
 
   const focusDate = (date: Date) => {
     const key = format(date, 'yyyy-MM-dd');
@@ -63,7 +63,7 @@ export function CalendarGrid({
     if (event.key === 'ArrowRight') {
       event.preventDefault();
       const next = addDays(dayValue, 1);
-      if (isDateInGrid(next)) {
+      if (isDateInGrid(next, startDate, endDate)) {
         setFocusedDate(next);
         requestAnimationFrame(() => focusDate(next));
       }
@@ -73,7 +73,7 @@ export function CalendarGrid({
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
       const next = addDays(dayValue, -1);
-      if (isDateInGrid(next)) {
+      if (isDateInGrid(next, startDate, endDate)) {
         setFocusedDate(next);
         requestAnimationFrame(() => focusDate(next));
       }
@@ -83,7 +83,7 @@ export function CalendarGrid({
     if (event.key === 'ArrowUp') {
       event.preventDefault();
       const next = addDays(dayValue, -7);
-      if (isDateInGrid(next)) {
+      if (isDateInGrid(next, startDate, endDate)) {
         setFocusedDate(next);
         requestAnimationFrame(() => focusDate(next));
       }
@@ -93,7 +93,7 @@ export function CalendarGrid({
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       const next = addDays(dayValue, 7);
-      if (isDateInGrid(next)) {
+      if (isDateInGrid(next, startDate, endDate)) {
         setFocusedDate(next);
         requestAnimationFrame(() => focusDate(next));
       }
