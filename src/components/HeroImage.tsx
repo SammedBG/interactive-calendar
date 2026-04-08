@@ -41,13 +41,17 @@ export function HeroImage({ currentMonth, themeClasses }: HeroImageProps) {
   }, [imageUrl]);
 
   useEffect(() => {
-    // Preload all hero images once to avoid blank frames during page flips.
-    MONTH_IMAGES.forEach((src) => {
+    // Preload adjacent images only to keep flips smooth without heavy decode pressure.
+    const prevIndex = (monthIndex + MONTH_IMAGES.length - 1) % MONTH_IMAGES.length;
+    const nextIndex = (monthIndex + 1) % MONTH_IMAGES.length;
+    const preloadTargets = [MONTH_IMAGES[prevIndex], MONTH_IMAGES[nextIndex]];
+
+    preloadTargets.forEach((src) => {
       const preloader = new window.Image();
       preloader.decoding = 'async';
       preloader.src = src;
     });
-  }, []);
+  }, [monthIndex]);
 
   return (
     <div className="relative w-full aspect-[5/4] sm:aspect-[4/3] flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 rounded-t-[4px] z-10">

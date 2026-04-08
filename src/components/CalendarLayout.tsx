@@ -33,6 +33,8 @@ export function CalendarLayout() {
   const holidaysMap = useIndianHolidays(currentMonth);
   const [direction, setDirection] = useState(0); // 1 = right, -1 = left
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [useLightweightMotion, setUseLightweightMotion] = useState(false);
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
   const [isSectionLoading, setIsSectionLoading] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
 
@@ -65,8 +67,43 @@ export function CalendarLayout() {
       return;
     }
 
-    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
-    setShowSwipeHint(coarsePointer);
+    const pointerQuery = window.matchMedia('(pointer: coarse)');
+
+    const evaluatePerformanceMode = () => {
+      const nav = navigator as Navigator & { deviceMemory?: number };
+      const lowCpu = (navigator.hardwareConcurrency ?? 8) <= 4;
+      const lowMemory = typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4;
+      const narrowScreen = window.innerWidth < 900;
+      const coarse = pointerQuery.matches;
+
+      setIsCoarsePointer(coarse);
+      setUseLightweightMotion(coarse || narrowScreen || lowCpu || lowMemory);
+    };
+
+    evaluatePerformanceMode();
+    window.addEventListener('resize', evaluatePerformanceMode, { passive: true });
+
+    if (typeof pointerQuery.addEventListener === 'function') {
+      pointerQuery.addEventListener('change', evaluatePerformanceMode);
+      return () => {
+        window.removeEventListener('resize', evaluatePerformanceMode);
+        pointerQuery.removeEventListener('change', evaluatePerformanceMode);
+      };
+    }
+
+    pointerQuery.addListener(evaluatePerformanceMode);
+    return () => {
+      window.removeEventListener('resize', evaluatePerformanceMode);
+      pointerQuery.removeListener(evaluatePerformanceMode);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    setShowSwipeHint(isCoarsePointer);
     swipeHintTimeoutRef.current = window.setTimeout(() => {
       setShowSwipeHint(false);
     }, 7000);
@@ -84,7 +121,7 @@ export function CalendarLayout() {
         window.clearTimeout(swipeHintTimeoutRef.current);
       }
     };
-  }, []);
+  }, [isCoarsePointer]);
 
   const hideSwipeHint = () => {
     setShowSwipeHint(false);
@@ -95,6 +132,11 @@ export function CalendarLayout() {
   };
 
   const triggerSectionSkeleton = () => {
+    if (useLightweightMotion) {
+      setIsSectionLoading(false);
+      return;
+    }
+
     setIsSectionLoading(true);
     if (sectionSkeletonTimeoutRef.current !== null) {
       window.clearTimeout(sectionSkeletonTimeoutRef.current);
@@ -113,7 +155,7 @@ export function CalendarLayout() {
 
     scrollUnlockTimeoutRef.current = window.setTimeout(() => {
       isScrollingRef.current = false;
-    }, prefersReducedMotion ? 220 : 600);
+    }, prefersReducedMotion || useLightweightMotion ? 220 : 520);
   };
 
   const handleWheel = (e: React.WheelEvent) => {
@@ -213,36 +255,58 @@ export function CalendarLayout() {
         center: { zIndex: 1, opacity: 1 },
         exit: { zIndex: 0, opacity: 0 },
       }
+    : useLightweightMotion
+      ? {
+          enter: (direction: number) => ({
+            x: direction > 0 ? 24 : -24,
+            opacity: 0.45,
+            scale: 0.995,
+          }),
+          center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1,
+            scale: 1,
+          },
+          exit: (direction: number) => ({
+            zIndex: 0,
+            x: direction < 0 ? 24 : -24,
+            opacity: 0,
+            scale: 0.995,
+          }),
+        }
     : {
         enter: (direction: number) => ({
           rotateX: direction > 0 ? -120 : 120, // Start tilted like turning a page over rings
-          z: direction > 0 ? 50 : -50,
+          y: direction > 0 ? -8 : 8,
           opacity: 0,
-          filter: 'brightness(0.3) drop-shadow(0px 20px 20px rgba(0,0,0,0.5))',
         }),
         center: {
           zIndex: 1,
           rotateX: 0,
-          z: 0,
+          y: 0,
           opacity: 1,
-          filter: 'brightness(1) drop-shadow(0px 0px 0px rgba(0,0,0,0))',
         },
         exit: (direction: number) => ({
           zIndex: 0,
           rotateX: direction < 0 ? -120 : 120,
-          z: direction < 0 ? 50 : -50,
+          y: direction < 0 ? -8 : 8,
           opacity: 0,
-          filter: 'brightness(0.3) drop-shadow(0px 20px 20px rgba(0,0,0,0.5))',
         }),
       };
 
   const flipTransition = prefersReducedMotion
     ? { opacity: { duration: 0.2 } }
+    : useLightweightMotion
+      ? {
+          x: { duration: 0.24 },
+          opacity: { duration: 0.22 },
+          scale: { duration: 0.24 },
+        }
     : {
         rotateX: { duration: 0.65, ease: flipEase },
-        z: { duration: 0.65, ease: flipEase },
-        opacity: { duration: 0.4 },
-        filter: { duration: 0.65, ease: flipEase },
+        y: { duration: 0.45, ease: flipEase },
+        opacity: { duration: 0.34 },
       };
 
   return (
@@ -284,7 +348,8 @@ export function CalendarLayout() {
               animate="center"
               exit="exit"
               transition={flipTransition}
-              className="col-start-1 row-start-1 w-full bg-white dark:bg-neutral-900 rounded-[4px] origin-top transform-gpu preserve-3d backface-hidden flex flex-col shadow-sm border border-neutral-200/70 dark:border-neutral-800"
+              className={`col-start-1 row-start-1 w-full bg-white dark:bg-neutral-900 rounded-[4px] origin-top transform-gpu flex flex-col shadow-sm border border-neutral-200/70 dark:border-neutral-800 ${useLightweightMotion ? '' : 'preserve-3d backface-hidden'}`}
+              style={{ willChange: 'transform, opacity' }}
             >
               {/* Top half: Hero Image including angular cut */}
               <HeroImage currentMonth={currentMonth} themeClasses={themeClasses} />
@@ -323,8 +388,8 @@ export function CalendarLayout() {
                     />
                     {isSectionLoading && (
                       <div className="absolute inset-0 z-20 pointer-events-none bg-white/70 dark:bg-neutral-900/70 backdrop-blur-[1px] p-2 sm:p-3">
-                        <div className="skeleton-shimmer h-4 w-24 rounded mb-4" />
-                        <div className="skeleton-shimmer h-[220px] w-full rounded" />
+                        <div className="skeleton-shimmer h-4 w-24 rounded mb-3" />
+                        <div className="skeleton-shimmer h-[180px] sm:h-[220px] w-full rounded" />
                       </div>
                     )}
                   </div>
@@ -344,14 +409,14 @@ export function CalendarLayout() {
                       />
                       {isSectionLoading && (
                         <div className="absolute inset-0 z-20 pointer-events-none bg-white/70 dark:bg-neutral-900/70 backdrop-blur-[1px] p-2 sm:p-4">
-                          <div className="grid grid-cols-7 gap-2 mb-4">
-                            {Array.from({ length: 7 }).map((_, idx) => (
+                          <div className="grid grid-cols-3 gap-2 mb-3">
+                            {Array.from({ length: 3 }).map((_, idx) => (
                               <div key={`head-${idx}`} className="skeleton-shimmer h-3 rounded" />
                             ))}
                           </div>
-                          <div className="grid grid-cols-7 gap-2">
-                            {Array.from({ length: 42 }).map((_, idx) => (
-                              <div key={`cell-${idx}`} className="skeleton-shimmer h-9 min-[390px]:h-10 sm:h-12 rounded" />
+                          <div className="grid grid-cols-2 gap-3">
+                            {Array.from({ length: 6 }).map((_, idx) => (
+                              <div key={`cell-${idx}`} className="skeleton-shimmer h-16 sm:h-20 rounded" />
                             ))}
                           </div>
                         </div>
