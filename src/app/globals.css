@@ -39,10 +39,11 @@ body {
       to bottom,
       transparent 0px,
       transparent 23px,
-      rgba(15, 23, 42, 0.08) 23px,
-      rgba(15, 23, 42, 0.08) 24px
+      rgba(15, 23, 42, 0.05) 23px,
+      rgba(15, 23, 42, 0.05) 24px
     );
     background-attachment: local;
+    background-position: 0 1px;
   }
 
   .dark .notes-paper {
@@ -50,9 +51,10 @@ body {
       to bottom,
       transparent 0px,
       transparent 23px,
-      rgba(148, 163, 184, 0.25) 23px,
-      rgba(148, 163, 184, 0.25) 24px
+      rgba(148, 163, 184, 0.15) 23px,
+      rgba(148, 163, 184, 0.15) 24px
     );
+    background-position: 0 1px;
   }
 }
 
