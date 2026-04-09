@@ -60,6 +60,14 @@ This project focuses on frontend engineering quality:
 - next-themes
 - Lucide React
 
+## Technical Choices & Optimizations
+
+- **Next.js & React 18:** Chosen for server-side capabilities, structured routing, and modern hooks API boundary management (`useClient`).
+- **Framer Motion & Adaptive Performance:** Features a dynamic `useLightweightMotion` hook that disables GPU-heavy 3D `rotateX` flips in favor of simple opacity/x-axis slides on low-end devices (detecting `pointer: coarse`, battery-saving modes, or low `navigator.hardwareConcurrency`).
+- **Tailwind CSS:** Used for highly maintainable, utility-first styling, including custom `.skeleton-shimmer` utilities for loading states.
+- **Image Pipeline & Resiliency:** Monthly background images use `next/image` with eager loading for the current month and preloading *only* for adjacent months to reduce network saturation. We implemented strict HTTP validation to swap out dead Unsplash URLs and ensure 100% asset uptime.
+- **Responsive & Accessible Design:** Touch-target expansion, swipe thresholds tailored for mobile, and skeleton structural simplifications ensure the calendar remains buttery smooth across all viewports from 320px up.
+
 ## Project Structure
 
 - `src/components`: UI components and interactive layout
