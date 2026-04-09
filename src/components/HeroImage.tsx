@@ -12,17 +12,17 @@ export interface HeroImageProps {
 
 const MONTH_IMAGES = [
   'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1549488344-c6e7a25a4c51?q=80&w=1400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1517697471339-4aa32003c11a?q=80&w=1400&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?q=80&w=1400&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1490750967868-88cb44cb2722?q=80&w=1400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1400&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1400&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?q=80&w=1400&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1433838552652-f9a46b332c40?q=80&w=1400&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=1400&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1444044205806-38f32ac628f5?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1544261453-24151fb4ad0c?q=80&w=1400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1418985991508-e47386d96a71?q=80&w=1400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?q=80&w=1400&auto=format&fit=crop',
 ];
 
 const FALLBACK_IMAGE = '/images/calendar-fallback.svg';
